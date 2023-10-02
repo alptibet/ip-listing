@@ -1,0 +1,2 @@
+-- Get projects data from DB, remove dummy data
+--Complete add project functionality
