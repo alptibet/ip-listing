@@ -31,10 +31,21 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 
+type Project = {
+  id: string;
+  name: string;
+};
+
+const initialProject: Project = {
+  id: '',
+  name: 'Select project',
+};
+
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
-  const [selectedProject, setSelectedProject] = useState('');
+  const [selectedProject, setSelectedProject] =
+    useState<Project>(initialProject);
 
   return (
     <Dialog open={showNewProjectDialog} onOpenChange={setShowNewProjectDialog}>
@@ -45,9 +56,9 @@ export default function ProjectSwitcher() {
             role="combobox"
             aria-expanded={showPopover}
             aria-label="Search project"
-            className="font-semibold"
+            className="font-semibold w-[200px] justify-between"
           >
-            {selectedProject ? selectedProject : 'Select project'}
+            {selectedProject.name ? selectedProject.name : 'Select project'}
             <CaretSortIcon />
           </Button>
         </PopoverTrigger>
@@ -62,14 +73,14 @@ export default function ProjectSwitcher() {
                     className="text-sm"
                     key={project.id}
                     onSelect={() => {
-                      setSelectedProject(project.name);
+                      setSelectedProject(project);
                       setShowPopover(false);
                     }}
                   >
                     {project.name}
                     <CheckIcon //will later change according to real data
                       className={cn(
-                        selectedProject === project.name
+                        selectedProject.name === project.name
                           ? 'opacity-100'
                           : 'opacity-0'
                       )}
@@ -101,7 +112,7 @@ export default function ProjectSwitcher() {
         <DialogHeader>
           <DialogTitle>Create Project</DialogTitle>
           <DialogDescription>
-            Add a new project to manage ip list.
+            Add a new project to manage device ip addresses
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
@@ -121,19 +132,19 @@ export default function ProjectSwitcher() {
     </Dialog>
   );
 }
-
+//DELETE DUMMY DATA later
 const DUMMY_DATA = {
   projects: [
     {
-      id: 1,
+      id: 'a',
       name: 'Radisson',
     },
     {
-      id: 2,
+      id: 'b',
       name: 'OVC',
     },
     {
-      id: 3,
+      id: 'c',
       name: 'REKA2',
     },
   ],

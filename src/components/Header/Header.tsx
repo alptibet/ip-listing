@@ -7,7 +7,6 @@ export default function Header() {
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-5">
         <ButtonLink label="HOME" url="/" />
-
         <ProjectSwitcher />
       </div>
 
