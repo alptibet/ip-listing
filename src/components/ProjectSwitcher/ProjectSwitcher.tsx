@@ -70,7 +70,7 @@ export default function ProjectSwitcher() {
               <CommandGroup heading="Projects">
                 {DUMMY_DATA.projects.map((project) => (
                   <CommandItem
-                    className="text-sm"
+                    className="text-sm flex items-center justify-between"
                     key={project.id}
                     onSelect={() => {
                       setSelectedProject(project);
