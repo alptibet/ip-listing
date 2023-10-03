@@ -1,15 +1,163 @@
-'use client';
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
+import { Device, columns } from '@/components/DataTable/Columns';
+import { DataTable } from '@/components/DataTable/DataTable';
+
+const DUMMY_DATA: Device[] = [
+  {
+    name: 'MTN222',
+    description: 'KNX concentrator',
+    location: 'SHAK2',
+    ipAddress: '192.168.2.1',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Assigned',
+    system: 'KNX',
+  },
+  {
+    name: 'ADV212',
+    description: 'KNX test',
+    location: 'SHAK3',
+    ipAddress: '192.168.2.2',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'CCTV',
+  },
+  {
+    name: 'SNS88',
+    description: 'KNX DEVICE',
+    location: 'SHAK4',
+    ipAddress: '192.168.2.3',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'HVAC',
+  },
+  {
+    name: 'MTN222',
+    description: 'KNX concentrator',
+    location: 'SHAK2',
+    ipAddress: '192.168.2.1',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Assigned',
+    system: 'KNX',
+  },
+  {
+    name: 'ADV212',
+    description: 'KNX test',
+    location: 'SHAK3',
+    ipAddress: '192.168.2.2',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'CCTV',
+  },
+  {
+    name: 'SNS88',
+    description: 'KNX DEVICE',
+    location: 'SHAK4',
+    ipAddress: '192.168.2.3',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'HVAC',
+  },
+  {
+    name: 'MTN222',
+    description: 'KNX concentrator',
+    location: 'SHAK2',
+    ipAddress: '192.168.2.1',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Assigned',
+    system: 'KNX',
+  },
+  {
+    name: 'ADV212',
+    description: 'KNX test',
+    location: 'SHAK3',
+    ipAddress: '192.168.2.2',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'CCTV',
+  },
+  {
+    name: 'SNS88',
+    description: 'KNX DEVICE',
+    location: 'SHAK4',
+    ipAddress: '192.168.2.3',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'HVAC',
+  },
+  {
+    name: 'MTN222',
+    description: 'KNX concentrator',
+    location: 'SHAK2',
+    ipAddress: '192.168.2.1',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Assigned',
+    system: 'KNX',
+  },
+  {
+    name: 'ADV212',
+    description: 'KNX test',
+    location: 'SHAK3',
+    ipAddress: '192.168.2.2',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'CCTV',
+  },
+  {
+    name: 'SNS88',
+    description: 'KNX DEVICE',
+    location: 'SHAK4',
+    ipAddress: '192.168.2.3',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'HVAC',
+  },
+  {
+    name: 'MTN222',
+    description: 'KNX concentrator',
+    location: 'SHAK2',
+    ipAddress: '192.168.2.1',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Assigned',
+    system: 'KNX',
+  },
+  {
+    name: 'ADV212',
+    description: 'KNX test',
+    location: 'SHAK3',
+    ipAddress: '192.168.2.2',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'CCTV',
+  },
+  {
+    name: 'SNS88',
+    description: 'KNX DEVICE',
+    location: 'SHAK4',
+    ipAddress: '192.168.2.3',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Not Assigned',
+    system: 'HVAC',
+  },
+];
 
 export default function DashboardPage() {
-  const handleClick = function() {
-    toast({
-      title: 'Test Toast',
-      description: 'Test Toast',
-    });
-  };
-  const { toast } = useToast();
-  return <Button onClick={handleClick}>Show Toast!</Button>;
+  return (
+    <div className="mx-2 my-2">
+      <DataTable columns={columns} data={DUMMY_DATA} />
+    </div>
+  );
 }

@@ -1,2 +1,9 @@
 -- Get projects data from DB, remove dummy data
 --Complete add project functionality
+--Complete pagination
+--Do not toggle visibility row actions
+--fix checkbox position when selected
+--row headers smaller
+--add hyperlinks to ip addresses
+--add additional filters assigned system etc.
+--add buttons for adding devices
