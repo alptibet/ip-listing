@@ -1,9 +1,5 @@
 'use client';
 
-import { ArrowUpDown } from 'lucide-react';
-import { ColumnDef } from '@tanstack/react-table';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { Button } from '../ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
@@ -12,6 +8,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { ColumnDef } from '@tanstack/react-table';
+import { ArrowUpDown } from 'lucide-react';
+import { Button } from '../ui/button';
 
 export type Device = {
   name: string;
@@ -108,6 +109,7 @@ export const columns: ColumnDef<Device>[] = [
               Copy IP Address
             </DropdownMenuItem>
             <DropdownMenuItem>Duplicate Item</DropdownMenuItem>
+            <DropdownMenuItem>Edit Item</DropdownMenuItem>
             <DropdownMenuItem>Delete Item</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
