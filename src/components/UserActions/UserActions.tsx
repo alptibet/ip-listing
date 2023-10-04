@@ -1,5 +1,5 @@
 'use client';
-import { CaretSortIcon } from '@radix-ui/react-icons';
+import { CaretSortIcon, PersonIcon } from '@radix-ui/react-icons';
 import { ButtonLink, ButtonLogout } from '../Buttons/Buttons';
 import { Button } from '../ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
@@ -19,10 +19,11 @@ export default function UserActions({ loggedInUser }: UserPropTypes) {
   return (
     <Popover open={showUserActions} onOpenChange={setShowUserActions}>
       <PopoverTrigger asChild>
-        <Button>
+        <Button className="font-bold flex items-center gap-2">
+          <PersonIcon />
           {loggedInUser
             ? `${loggedInUser.firstName} ${loggedInUser.lastName}`
-            : 'User Actions'}
+            : 'Login/Signup'}
           <CaretSortIcon />
         </Button>
       </PopoverTrigger>
