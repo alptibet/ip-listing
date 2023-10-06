@@ -32,6 +32,7 @@ import {
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useState } from 'react';
+import FacetedFilter from './FacetedFilter';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -68,7 +69,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center gap-2 py-4">
         <Input
           placeholder="Filter devices..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
@@ -77,6 +78,17 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+        <Input
+          placeholder="Filter IPs..."
+          value={
+            (table.getColumn('ipAddress')?.getFilterValue() as string) ?? ''
+          }
+          onChange={(event) =>
+            table.getColumn('ipAddress')?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <FacetedFilter title="Filter Systems" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -115,9 +127,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
