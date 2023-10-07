@@ -47,7 +47,7 @@ export default function TableToolbar<TData>({
           variant="ghost"
           onClick={() => table.resetColumnFilters()}
         >
-          Reset
+          Clear Filters
         </Button>
       )}
       <ViewOptions table={table} />
