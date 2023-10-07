@@ -88,6 +88,9 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'system',
     header: 'System',
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     id: 'actions',

@@ -1,5 +1,4 @@
 'use client';
-import { DataTablePagination } from './Pagination';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -7,11 +6,14 @@ import {
   VisibilityState,
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { DataTablePagination } from './Pagination';
 
 import {
   Table,
@@ -22,17 +24,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
 import { useState } from 'react';
-import FacetedFilter from './FacetedFilter';
+
+import TableToolbar from './TableToolbar';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,14 +45,17 @@ export function DataTable<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
       sorting,
       columnFilters,
@@ -69,53 +66,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center gap-2 py-4">
-        <Input
-          placeholder="Filter devices..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Input
-          placeholder="Filter IPs..."
-          value={
-            (table.getColumn('ipAddress')?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) =>
-            table.getColumn('ipAddress')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <FacetedFilter title="Filter Systems" />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              View
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -127,9 +78,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
