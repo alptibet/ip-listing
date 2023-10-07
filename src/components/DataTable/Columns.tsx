@@ -13,6 +13,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
 
 export type Device = {
   name: string;
@@ -84,6 +85,9 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     accessorKey: 'system',
@@ -106,6 +110,7 @@ export const columns: ColumnDef<Device>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <Separator />
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(device.ipAddress)}
             >

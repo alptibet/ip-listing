@@ -1,4 +1,4 @@
-import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons';
+import { FilterIcon, CheckIcon } from 'lucide-react';
 import {
   Command,
   CommandEmpty,
@@ -18,7 +18,7 @@ import { Column } from '@tanstack/react-table';
 type FacetedFilterProps<TData, TValue> = {
   title?: string;
   column?: Column<TData, TValue>;
-  filterOptions: { id: string; name: string }[];
+  filterOptions: { option: string }[];
 };
 
 export default function FacetedFilter<TData, TValue>({
@@ -33,7 +33,7 @@ export default function FacetedFilter<TData, TValue>({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="h-8 border-dashed">
-          <PlusCircledIcon className="mr-2 h-4 w-4" />
+          <FilterIcon className="mr-2 h-4 w-4" />
           {title}
           {selectedValues?.size > 0 && (
             <>
@@ -54,14 +54,14 @@ export default function FacetedFilter<TData, TValue>({
                   </Badge>
                 ) : (
                   filterOptions
-                    .filter((option) => selectedValues.has(option.name))
+                    .filter((option) => selectedValues.has(option.option))
                     .map((option) => (
                       <Badge
                         variant="secondary"
-                        key={option.name}
+                        key={option.option}
                         className="rounded-sm px-1 font-normal"
                       >
-                        {option.name}
+                        {option.option}
                       </Badge>
                     ))
                 )}
@@ -76,15 +76,15 @@ export default function FacetedFilter<TData, TValue>({
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
               {filterOptions.map((option) => {
-                const isSelected = selectedValues.has(option.name);
+                const isSelected = selectedValues.has(option.option);
                 return (
                   <CommandItem
-                    key={option.id}
+                    key={option.option}
                     onSelect={() => {
                       if (isSelected) {
-                        selectedValues.delete(option.name);
+                        selectedValues.delete(option.option);
                       } else {
-                        selectedValues.add(option.name);
+                        selectedValues.add(option.option);
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
@@ -103,10 +103,10 @@ export default function FacetedFilter<TData, TValue>({
                       <CheckIcon className={cn('h-4 w-4')} />
                     </div>
 
-                    <span>{option.name}</span>
-                    {facets?.get(option.name) && (
+                    <span>{option.option}</span>
+                    {facets?.get(option.option) && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                        {facets.get(option.name)}
+                        {facets.get(option.option)}
                       </span>
                     )}
                   </CommandItem>

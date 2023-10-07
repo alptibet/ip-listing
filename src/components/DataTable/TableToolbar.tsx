@@ -1,9 +1,8 @@
-'use client';
-
 import { Input } from '../ui/input';
 import { Table } from '@tanstack/react-table';
 import FacetedFilter from './FacetedFilter';
 import ViewOptions from './ViewOptions';
+import { Button } from '../ui/button';
 
 type TableToolBarProps<TData> = {
   table: Table<TData>;
@@ -37,25 +36,47 @@ export default function TableToolbar<TData>({
         column={table.getColumn('system')}
         filterOptions={DUMMY_SYSTEMS.systems}
       />
+      <FacetedFilter
+        title="Filter Status"
+        column={table.getColumn('status')}
+        filterOptions={DUMMY_STATUS.statuses}
+      />
+      {isFiltered && (
+        <Button
+          className="h-8"
+          variant="ghost"
+          onClick={() => table.resetColumnFilters()}
+        >
+          Reset
+        </Button>
+      )}
       <ViewOptions table={table} />
     </div>
   );
 }
 
-//delete this later
+//delete these later
 const DUMMY_SYSTEMS = {
   systems: [
     {
-      id: 'a',
-      name: 'KNX',
+      option: 'KNX',
     },
     {
-      id: 'b',
-      name: 'CCTV',
+      option: 'CCTV',
     },
     {
-      id: 'c',
-      name: 'HVAC',
+      option: 'HVAC',
+    },
+  ],
+};
+
+const DUMMY_STATUS = {
+  statuses: [
+    {
+      option: 'Assigned',
+    },
+    {
+      option: 'Not Assigned',
     },
   ],
 };
