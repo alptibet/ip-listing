@@ -11,6 +11,7 @@ export default function DataCell({ getValue }) {
 
   return (
     <Input
+      className="w-32"
       disabled
       value={cellValue}
       onChange={(e) => setCellValue(e.target.value)}

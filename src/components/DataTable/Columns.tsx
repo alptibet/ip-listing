@@ -14,11 +14,9 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
-import DataCell from './DataCell';
 
 export type Device = {
   name: string;
-  description: string;
   location: string;
   ipAddress: string;
   subnet: string;
@@ -48,12 +46,8 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
-    cell: DataCell,
   },
-  {
-    accessorKey: 'description',
-    header: 'Description',
-  },
+
   {
     accessorKey: 'ipAddress',
     header: ({ column }) => {
