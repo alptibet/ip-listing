@@ -14,6 +14,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
+import DataCell from './DataCell';
 
 export type Device = {
   name: string;
@@ -33,14 +34,12 @@ export const columns: ColumnDef<Device>[] = [
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
       />
     ),
     enableSorting: false,
@@ -49,18 +48,19 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
+    cell: DataCell,
   },
   {
     accessorKey: 'description',
     header: 'Description',
   },
-
   {
     accessorKey: 'ipAddress',
     header: ({ column }) => {
       return (
         <Button
-          className=""
+          className="h-8"
+          size="sm"
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
@@ -84,14 +84,38 @@ export const columns: ColumnDef<Device>[] = [
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: ({ column }) => {
+      return (
+        <Button
+          className="h-8"
+          size="sm"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          <span>Status</span>
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
   },
   {
     accessorKey: 'system',
-    header: 'System',
+    header: ({ column }) => {
+      return (
+        <Button
+          className="h-8"
+          size="sm"
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+        >
+          System
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
@@ -99,7 +123,7 @@ export const columns: ColumnDef<Device>[] = [
   {
     id: 'actions',
     cell: ({ row }) => {
-      const device = row.original;
+      const tableRow = row.original;
 
       return (
         <DropdownMenu>
@@ -112,7 +136,7 @@ export const columns: ColumnDef<Device>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <Separator />
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(device.ipAddress)}
+              onClick={() => navigator.clipboard.writeText(tableRow.ipAddress)}
             >
               Copy IP Address
             </DropdownMenuItem>
