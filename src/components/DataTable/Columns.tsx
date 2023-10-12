@@ -1,19 +1,11 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import Actions from './Actions';
 
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
 
 export type Device = {
   name: string;
@@ -116,30 +108,10 @@ export const columns: ColumnDef<Device>[] = [
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
+    cell: ({ row, table }) => {
       const tableRow = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <Separator />
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(tableRow.ipAddress)}
-            >
-              Copy IP Address
-            </DropdownMenuItem>
-            <DropdownMenuItem>Duplicate Item</DropdownMenuItem>
-            <DropdownMenuItem>Edit Item</DropdownMenuItem>
-            <DropdownMenuItem>Delete Item</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      const zart = table;
+      return <Actions tableRow={tableRow} table={zart} />;
     },
   },
 ];

@@ -62,6 +62,12 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
     },
+    meta: {
+      editRow: () => {
+        console.log('deneme');
+      },
+      deneme: 'deneme',
+    },
   });
 
   return (
