@@ -15,7 +15,6 @@ type ActionsProps = { tableRow: Device; table: Table<Device> };
 
 export default function Actions({ tableRow, table }: ActionsProps) {
   const meta = table.options.meta;
-  meta.editRow();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

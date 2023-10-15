@@ -1,19 +1,9 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
 import Actions from './Actions';
 
 export type Device = {
@@ -119,7 +109,6 @@ export const columns: ColumnDef<Device>[] = [
     id: 'actions',
     cell: ({ row, table }) => {
       const tableRow = row.original;
-
       return <Actions table={table} tableRow={tableRow} />;
     },
   },
