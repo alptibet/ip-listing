@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  ColumnDef,
   ColumnFiltersState,
   SortingState,
   VisibilityState,
@@ -14,6 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
   RowData,
+  Row,
 } from '@tanstack/react-table';
 import { DataTablePagination } from './Pagination';
 
@@ -29,26 +29,22 @@ import {
 import { useState } from 'react';
 
 import TableToolbar from './TableToolbar';
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-}
+import { Device, columns } from './Columns';
+import DUMMY_DEVICES from '@/lib/DUMMY_DATA';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     editRow: () => void;
+    addRow: () => void;
   }
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [data, setTableData] = useState(() => [...DUMMY_DEVICES]);
 
   const table = useReactTable({
     data,
@@ -71,6 +67,18 @@ export function DataTable<TData, TValue>({
       rowSelection,
     },
     meta: {
+      addRow: () => {
+        const newRow: Device = {
+          name: '',
+          location: '',
+          ipAddress: '',
+          subnet: '',
+          gateway: '',
+          status: 'Not Assigned',
+          system: '',
+        };
+        setTableData((old) => [...old, newRow]);
+      },
       editRow: () => {
         console.log('deneme');
       },

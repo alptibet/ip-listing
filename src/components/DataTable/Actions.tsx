@@ -24,6 +24,7 @@ interface ActionsProps<TData> {
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEdits, setViewEdits] = useState(false);
   const meta = table.options.meta?.editRow;
+  const addRow = table.options.meta?.addRow;
   return viewEdits ? (
     <div className="flex gap-2">
       <Button>
@@ -48,7 +49,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         >
           Copy IP Address
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={meta}>Duplicate Item</DropdownMenuItem>
+        <DropdownMenuItem onClick={addRow}>Duplicate Item</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setViewEdits(true)}>
           Edit Item
         </DropdownMenuItem>
