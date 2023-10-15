@@ -9,12 +9,15 @@ import {
 } from '../ui/dropdown-menu';
 import { Separator } from '@radix-ui/react-separator';
 import type { Device } from './Columns';
-import { Table } from '@tanstack/react-table';
+import { Table, TableMeta } from '@tanstack/react-table';
 
-type ActionsProps = { tableRow: Device; table: Table<Device> };
+interface ActionsProps<TData> {
+  tableRow: Device;
+  table: Table<TData>;
+}
 
-export default function Actions({ tableRow, table }: ActionsProps) {
-  const meta = table.options.meta;
+export default function Actions({ tableRow, table }: ActionsProps<Device>) {
+  const meta = table.options.meta?.editRow;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,8 +33,14 @@ export default function Actions({ tableRow, table }: ActionsProps) {
         >
           Copy IP Address
         </DropdownMenuItem>
-        <DropdownMenuItem>Duplicate Item</DropdownMenuItem>
-        <DropdownMenuItem>Edit Item</DropdownMenuItem>
+        <DropdownMenuItem onClick={meta}>Duplicate Item</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            console.log(tableRow.ipAddress);
+          }}
+        >
+          Edit Item
+        </DropdownMenuItem>
         <DropdownMenuItem>Delete Item</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

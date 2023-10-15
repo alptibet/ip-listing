@@ -13,6 +13,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  RowData,
 } from '@tanstack/react-table';
 import { DataTablePagination } from './Pagination';
 
@@ -32,6 +33,12 @@ import TableToolbar from './TableToolbar';
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+}
+
+declare module '@tanstack/react-table' {
+  interface TableMeta<TData extends RowData> {
+    editRow: () => void;
+  }
 }
 
 export function DataTable<TData, TValue>({
@@ -67,7 +74,6 @@ export function DataTable<TData, TValue>({
       editRow: () => {
         console.log('deneme');
       },
-      deneme: 'deneme',
     },
   });
 
