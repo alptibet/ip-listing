@@ -1,4 +1,8 @@
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import {
+  DotsHorizontalIcon,
+  CheckIcon,
+  CrossCircledIcon,
+} from '@radix-ui/react-icons';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -9,7 +13,8 @@ import {
 } from '../ui/dropdown-menu';
 import { Separator } from '@radix-ui/react-separator';
 import type { Device } from './Columns';
-import { Table, TableMeta } from '@tanstack/react-table';
+import { Table } from '@tanstack/react-table';
+import { useState } from 'react';
 
 interface ActionsProps<TData> {
   tableRow: Device;
@@ -17,8 +22,18 @@ interface ActionsProps<TData> {
 }
 
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
+  const [viewEdits, setViewEdits] = useState(false);
   const meta = table.options.meta?.editRow;
-  return (
+  return viewEdits ? (
+    <div className="flex gap-2">
+      <Button>
+        <CheckIcon />
+      </Button>
+      <Button variant="destructive" onClick={() => setViewEdits(false)}>
+        <CrossCircledIcon />
+      </Button>
+    </div>
+  ) : (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
@@ -34,11 +49,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
           Copy IP Address
         </DropdownMenuItem>
         <DropdownMenuItem onClick={meta}>Duplicate Item</DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => {
-            console.log(tableRow.ipAddress);
-          }}
-        >
+        <DropdownMenuItem onClick={() => setViewEdits(true)}>
           Edit Item
         </DropdownMenuItem>
         <DropdownMenuItem>Delete Item</DropdownMenuItem>
