@@ -25,7 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import TableToolbar from './TableToolbar';
 import { Device, columns } from './Columns';
@@ -43,7 +43,9 @@ declare module '@tanstack/react-table' {
 }
 
 export function DataTable() {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'ipAddress', desc: false },
+  ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
@@ -55,7 +57,6 @@ export function DataTable() {
     data,
     columns,
     enableRowSelection: true,
-    enableMultiRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -116,14 +117,12 @@ export function DataTable() {
       },
       removeRow: (rowIndex: number) => {
         console.log(rowIndex);
-        const old = [...data];
-        setData(old.splice(rowIndex, 1));
-        // setData((old) =>
-        //   old.filter((_row: Device, index: number) => index !== rowIndex)
-        // );
-        // setOriginalData((old) =>
-        //   old.filter((_row: Device, index: number) => index !== rowIndex)
-        // );
+        let old = [...data];
+        const setFilterFunc = (old: Device[]) =>
+          old.filter((_row: Device, index: number) => index !== rowIndex);
+        setData(setFilterFunc);
+        setOriginalData(setFilterFunc);
+        setRowSelection({});
       },
     },
   });

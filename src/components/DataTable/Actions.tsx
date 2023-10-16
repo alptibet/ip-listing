@@ -24,9 +24,11 @@ interface ActionsProps<TData> {
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const tableMeta = table.options.meta;
+
   const addRow = table.options.meta?.addRow;
+
   const removeRow = function() {
-    console.log(tableRow.index);
+    console.log(tableRow.id);
     tableMeta?.removeRow(tableRow.index);
   };
 

@@ -15,7 +15,8 @@ export default function TableToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const handleRemove = function() {
-    const dene = table.getSelectedRowModel().rows;
+    const dene = table.getSelectedRowModel().rowsById;
+    console.log(dene[0].id);
     table.options.meta?.removeRow(dene[0].index);
   };
 
