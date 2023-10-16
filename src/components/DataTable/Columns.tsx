@@ -120,6 +120,7 @@ export const columns: ColumnDef<Device>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
+    cell: EditableCell,
   },
   {
     id: 'actions',

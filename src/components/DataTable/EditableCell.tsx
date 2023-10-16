@@ -55,8 +55,9 @@ export default function EditableCell({
       </Select>
     ) : (
       <Input
+        className="w-32"
         value={cellData as string}
-        onChange={(e) => setCellData(e.target.value)}
+        onChange={(e) => onSelectChange(e.target.value)}
         onBlur={onBlur}
         type={columnMeta?.type || 'text'}
       />

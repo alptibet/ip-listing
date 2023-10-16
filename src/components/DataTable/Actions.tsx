@@ -24,14 +24,13 @@ interface ActionsProps<TData> {
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const tableMeta = table.options.meta;
-  const editRow = table.options.meta?.editRow;
   const addRow = table.options.meta?.addRow;
   const removeRow = function() {
     tableMeta?.removeRow(tableRow.index);
   };
 
-  const setEditedRows = function(e: React.MouseEvent<HTMLButtonElement>) {
-    const elementName = e.currentTarget.name;
+  const setEditedRows = function(e: React.MouseEvent<any>) {
+    const elementName = e.currentTarget.id;
     table.options.meta?.setEditedRows((old: []) => ({
       ...old,
       [tableRow.index]: !old[tableRow.index],
@@ -43,13 +42,22 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
 
   return viewEditActions ? (
     <div className="flex gap-2">
-      <Button name="edit">
+      <Button
+        onClick={(e) => {
+          setViewEditActions(false);
+          setEditedRows(e);
+        }}
+        id="done"
+      >
         <CheckIcon />
       </Button>
       <Button
-        name="cancel"
+        id="cancel"
         variant="destructive"
-        onClick={() => setViewEditActions(false)}
+        onClick={(e) => {
+          setViewEditActions(false);
+          setEditedRows(e);
+        }}
       >
         <CrossCircledIcon />
       </Button>
@@ -65,22 +73,23 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <Separator />
         <DropdownMenuItem
-          onClick={() =>
-            navigator.clipboard.writeText(tableRow.original.ipAddress)
-          }
+          onClick={() => console.log(table.options.meta?.editedRows)}
         >
           Copy IP Address
         </DropdownMenuItem>
         <DropdownMenuItem onClick={addRow}>Add Row</DropdownMenuItem>
         <DropdownMenuItem
-          onClick={() => {
+          id="edit"
+          onClick={(e) => {
             setViewEditActions(true);
-            setEditedRows;
+            setEditedRows(e);
           }}
         >
           Edit Item
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={removeRow}>Delete Item</DropdownMenuItem>
+        <DropdownMenuItem id="remove" onClick={removeRow}>
+          Delete Item
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
