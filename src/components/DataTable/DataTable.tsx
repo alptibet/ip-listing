@@ -25,8 +25,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-
+import { Dispatch, SetStateAction, useState } from 'react';
 import TableToolbar from './TableToolbar';
 import { Device, columns } from './Columns';
 import DUMMY_DEVICES from '@/lib/DUMMY_DATA';
@@ -36,6 +35,7 @@ declare module '@tanstack/react-table' {
     editRow: (rowIndex: number, columnId: string, value: string) => void;
     addRow: () => void;
     removeRow: (rowIndex: number) => void;
+    removeSelectedRows: (selectedRow: number[]) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
     editedRows: {};
     setEditedRows: Dispatch<SetStateAction<{}>>;
@@ -116,19 +116,28 @@ export function DataTable() {
         );
       },
       removeRow: (rowIndex: number) => {
-        console.log(rowIndex);
-        let old = [...data];
-        const setFilterFunc = (old: Device[]) =>
-          old.filter((_row: Device, index: number) => index !== rowIndex);
-        setData(setFilterFunc);
-        setOriginalData(setFilterFunc);
+        const oldData = [...data];
+        const newData = oldData.filter(
+          (_row: Device, index: number) => index !== rowIndex
+        );
+        console.log(newData);
+        setData(newData);
+        setOriginalData(newData);
         setRowSelection({});
+      },
+      removeSelectedRows: (selectedRows: number[]) => {
+        const oldData = [...data];
+        const newData = oldData.filter(
+          (_row: Device, index: number) => !selectedRows.includes(index)
+        );
+        setData(newData);
+        setOriginalData(newData);
       },
     },
   });
 
   return (
-    <div>
+    <>
       <TableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
@@ -189,6 +198,6 @@ export function DataTable() {
           <DataTablePagination table={table} />
         </div>
       </div>
-    </div>
+    </>
   );
 }

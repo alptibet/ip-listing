@@ -3,7 +3,6 @@ import { Table } from '@tanstack/react-table';
 import FacetedFilter from './FacetedFilter';
 import ViewOptions from './ViewOptions';
 import { Button } from '../ui/button';
-import AddDevice from './AddDevice';
 
 type TableToolBarProps<TData> = {
   table: Table<TData>;
@@ -15,9 +14,10 @@ export default function TableToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0;
 
   const handleRemove = function() {
-    const dene = table.getSelectedRowModel().rowsById;
-    console.log(dene[0].id);
-    table.options.meta?.removeRow(dene[0].index);
+    table.options.meta?.removeSelectedRows(
+      table.getSelectedRowModel().rows.map((row) => row.index)
+    );
+    table.resetRowSelection();
   };
 
   const handleAddDevice = function() {

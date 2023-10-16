@@ -28,7 +28,6 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const addRow = table.options.meta?.addRow;
 
   const removeRow = function() {
-    console.log(tableRow.id);
     tableMeta?.removeRow(tableRow.index);
   };
 

@@ -36,7 +36,7 @@ export default function EditableCell({
   };
 
   useEffect(() => {
-    setCellData;
+    setCellData(initValue);
   }, [initValue]);
 
   if (tableMeta?.editedRows[row.id]) {
@@ -57,7 +57,7 @@ export default function EditableCell({
       <Input
         className="w-32"
         value={cellData as string}
-        onChange={(e) => onSelectChange(e.target.value)}
+        onChange={(e) => setCellData(e.target.value)}
         onBlur={onBlur}
         type={columnMeta?.type || 'text'}
       />
