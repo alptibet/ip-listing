@@ -34,8 +34,12 @@ import DUMMY_DEVICES from '@/lib/DUMMY_DATA';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
-    editRow: () => void;
+    editRow: (rowIndex: number, columnId: string, value: string) => void;
     addRow: () => void;
+    removeRow: (rowIndex: number) => void;
+    revertData: (rowIndex: number, revert: boolean) => void;
+    editedRows;
+    setEditedRows;
   }
 }
 
@@ -44,7 +48,9 @@ export function DataTable() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setTableData] = useState(() => [...DUMMY_DEVICES]);
+  const [data, setData] = useState(() => [...DUMMY_DEVICES]);
+  const [originalData, setOriginalData] = useState(() => [...DUMMY_DEVICES]);
+  const [editedRows, setEditedRows] = useState({});
 
   const table = useReactTable({
     data,
@@ -67,6 +73,21 @@ export function DataTable() {
       rowSelection,
     },
     meta: {
+      editedRows,
+      setEditedRows,
+      revertData: (rowIndex: number, revert: boolean) => {
+        if (revert) {
+          setData((old) =>
+            old.map((row, index) =>
+              index === rowIndex ? originalData[rowIndex] : row
+            )
+          );
+        } else {
+          setOriginalData((old) =>
+            old.map((row, index) => (index === rowIndex ? data[rowIndex] : row))
+          );
+        }
+      },
       addRow: () => {
         const newRow: Device = {
           name: '',
@@ -77,10 +98,26 @@ export function DataTable() {
           status: 'Not Assigned',
           system: '',
         };
-        setTableData((old) => [...old, newRow]);
+        setData((old) => [...old, newRow]);
       },
-      editRow: () => {
-        console.log('deneme');
+      editRow: (rowIndex: number, columnId: string, value: string) => {
+        setData((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex],
+                [columnId]: value,
+              };
+            }
+            return row;
+          })
+        );
+      },
+      removeRow: (rowIndex: number) => {
+        const setFilterFunc = (old: Device[]) =>
+          old.filter((_row: Device, index: number) => index !== rowIndex);
+        setData(setFilterFunc);
+        setOriginalData(setFilterFunc);
       },
     },
   });

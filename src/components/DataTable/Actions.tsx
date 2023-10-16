@@ -13,24 +13,44 @@ import {
 } from '../ui/dropdown-menu';
 import { Separator } from '@radix-ui/react-separator';
 import type { Device } from './Columns';
-import { Table } from '@tanstack/react-table';
+import { Row, Table } from '@tanstack/react-table';
 import { useState } from 'react';
 
 interface ActionsProps<TData> {
-  tableRow: Device;
+  tableRow: Row<Device>;
   table: Table<TData>;
 }
 
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
-  const [viewEdits, setViewEdits] = useState(false);
-  const meta = table.options.meta?.editRow;
+  const [viewEditActions, setViewEditActions] = useState(false);
+  const tableMeta = table.options.meta;
+  const editRow = table.options.meta?.editRow;
   const addRow = table.options.meta?.addRow;
-  return viewEdits ? (
+  const removeRow = function() {
+    tableMeta?.removeRow(tableRow.index);
+  };
+
+  const setEditedRows = function(e: React.MouseEvent<HTMLButtonElement>) {
+    const elementName = e.currentTarget.name;
+    table.options.meta?.setEditedRows((old: []) => ({
+      ...old,
+      [tableRow.index]: !old[tableRow.index],
+    }));
+    if (elementName !== 'edit') {
+      tableMeta?.revertData(tableRow.index, e.currentTarget.name === 'cancel');
+    }
+  };
+
+  return viewEditActions ? (
     <div className="flex gap-2">
-      <Button>
+      <Button name="edit">
         <CheckIcon />
       </Button>
-      <Button variant="destructive" onClick={() => setViewEdits(false)}>
+      <Button
+        name="cancel"
+        variant="destructive"
+        onClick={() => setViewEditActions(false)}
+      >
         <CrossCircledIcon />
       </Button>
     </div>
@@ -45,15 +65,22 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <Separator />
         <DropdownMenuItem
-          onClick={() => navigator.clipboard.writeText(tableRow.ipAddress)}
+          onClick={() =>
+            navigator.clipboard.writeText(tableRow.original.ipAddress)
+          }
         >
           Copy IP Address
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={addRow}>Duplicate Item</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setViewEdits(true)}>
+        <DropdownMenuItem onClick={addRow}>Add Row</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            setViewEditActions(true);
+            setEditedRows;
+          }}
+        >
           Edit Item
         </DropdownMenuItem>
-        <DropdownMenuItem>Delete Item</DropdownMenuItem>
+        <DropdownMenuItem onClick={removeRow}>Delete Item</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

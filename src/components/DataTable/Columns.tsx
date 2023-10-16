@@ -1,10 +1,11 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import { ColumnDef } from '@tanstack/react-table';
+import { ColumnDef, RowData } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import Actions from './Actions';
+import EditableCell from './EditableCell';
 
 export type Device = {
   name: string;
@@ -15,6 +16,13 @@ export type Device = {
   status: 'Assigned' | 'Not Assigned';
   system: string;
 };
+
+declare module '@tanstack/table-core' {
+  interface ColumnMeta<TData extends RowData, TValue> {
+    type: string;
+    options: { value: string; label: string }[];
+  }
+}
 
 export const columns: ColumnDef<Device>[] = [
   {
@@ -38,7 +46,6 @@ export const columns: ColumnDef<Device>[] = [
     accessorKey: 'name',
     header: 'Name',
   },
-
   {
     accessorKey: 'ipAddress',
     header: ({ column }) => {
@@ -58,6 +65,7 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'subnet',
     header: 'Subnet',
+    cell: EditableCell,
   },
   {
     accessorKey: 'gateway',
@@ -85,6 +93,14 @@ export const columns: ColumnDef<Device>[] = [
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
+    cell: EditableCell,
+    meta: {
+      type: 'select',
+      options: [
+        { value: 'Assigned', label: 'Assigned' },
+        { value: 'Not Assigned', label: 'Not Assigned' },
+      ],
+    },
   },
   {
     accessorKey: 'system',
@@ -108,8 +124,7 @@ export const columns: ColumnDef<Device>[] = [
   {
     id: 'actions',
     cell: ({ row, table }) => {
-      const tableRow = row.original;
-      return <Actions table={table} tableRow={tableRow} />;
+      return <Actions table={table} tableRow={row} />;
     },
   },
 ];
