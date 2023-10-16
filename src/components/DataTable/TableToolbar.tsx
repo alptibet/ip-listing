@@ -14,6 +14,15 @@ export default function TableToolbar<TData>({
 }: TableToolBarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
+  const handleRemove = function() {
+    const dene = table.getSelectedRowModel().rows;
+    table.options.meta?.removeRow(dene[0].index);
+  };
+
+  const handleAddDevice = function() {
+    table.options.meta?.addRow();
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2 my-2">
@@ -56,8 +65,11 @@ export default function TableToolbar<TData>({
         )}
         <ViewOptions table={table} />
       </div>
-      <div className="mb-4">
-        <AddDevice />
+      <div className="flex gap-2 mb-4">
+        <Button onClick={handleAddDevice}>Add Device</Button>
+        <Button variant="destructive" onClick={handleRemove}>
+          Remove Selected
+        </Button>
       </div>
     </div>
   );

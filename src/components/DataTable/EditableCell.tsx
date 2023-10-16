@@ -1,4 +1,4 @@
-import { Cell, CellContext } from '@tanstack/react-table';
+import { Cell } from '@tanstack/react-table';
 import { Input } from '../ui/input';
 import {
   Select,

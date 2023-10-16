@@ -45,6 +45,7 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
+    cell: EditableCell,
   },
   {
     accessorKey: 'ipAddress',
@@ -61,6 +62,7 @@ export const columns: ColumnDef<Device>[] = [
         </Button>
       );
     },
+    cell: EditableCell,
   },
   {
     accessorKey: 'subnet',
@@ -70,10 +72,12 @@ export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: 'gateway',
     header: 'Gateway',
+    cell: EditableCell,
   },
   {
     accessorKey: 'location',
     header: 'Location',
+    cell: EditableCell,
   },
   {
     accessorKey: 'status',

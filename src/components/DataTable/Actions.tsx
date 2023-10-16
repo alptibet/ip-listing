@@ -26,17 +26,18 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const tableMeta = table.options.meta;
   const addRow = table.options.meta?.addRow;
   const removeRow = function() {
+    console.log(tableRow.index);
     tableMeta?.removeRow(tableRow.index);
   };
 
-  const setEditedRows = function(e: React.MouseEvent<any>) {
+  const setEditedRows = function(e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
     table.options.meta?.setEditedRows((old: []) => ({
       ...old,
       [tableRow.index]: !old[tableRow.index],
     }));
     if (elementName !== 'edit') {
-      tableMeta?.revertData(tableRow.index, e.currentTarget.name === 'cancel');
+      tableMeta?.revertData(tableRow.index, e.currentTarget.id === 'cancel');
     }
   };
 

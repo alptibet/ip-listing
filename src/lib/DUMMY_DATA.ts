@@ -26,6 +26,15 @@ let DUMMY_DEVICES: Device[] = [
     status: 'Not Assigned',
     system: 'HVAC',
   },
+  {
+    name: 'ZART',
+    location: 'SHAK5',
+    ipAddress: '192.168.2.4',
+    subnet: '255.255.255.0',
+    gateway: '192.168.2.1',
+    status: 'Assigned',
+    system: 'KNX',
+  },
 ];
 
 export default DUMMY_DEVICES;
