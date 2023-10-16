@@ -115,12 +115,15 @@ export function DataTable() {
         );
       },
       removeRow: (rowIndex: number) => {
-        setData((old) =>
-          old.filter((_row: Device, index: number) => index !== rowIndex)
-        );
-        setOriginalData((old) =>
-          old.filter((_row: Device, index: number) => index !== rowIndex)
-        );
+        console.log(rowIndex);
+        const old = [...data];
+        setData(old.splice(rowIndex, 1));
+        // setData((old) =>
+        //   old.filter((_row: Device, index: number) => index !== rowIndex)
+        // );
+        // setOriginalData((old) =>
+        //   old.filter((_row: Device, index: number) => index !== rowIndex)
+        // );
       },
     },
   });
