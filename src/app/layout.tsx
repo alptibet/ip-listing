@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'IP LIST',
-  description: 'Application for planning device IP addresses.',
+  description: 'Application for viewing and editing device IP addresses.',
 };
 
 export default function RootLayout({
