@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = "env(POSTGRES_PRISMA_URL)"
+  directUrl = "env(POSTGRES_URL_NON_POOLING)"
+}
+
+model Project {
+  id   String @id @default(cuid())
+  name String @unique
+}
+
+model System {
+  id   String @id @default(cuid())
+  name String @unique
+}
+
+model Device {
+  id        String @id @default(cuid())
+  name      String
+  location  String
+  ipAddress String
+  subnet    String
+  gateway   String
+  status    String
+  system    String
+}
