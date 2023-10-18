@@ -3,23 +3,24 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = "env(POSTGRES_PRISMA_URL)"
-  directUrl = "env(POSTGRES_URL_NON_POOLING)"
+  provider = "postgresql"
+  url      = "env(POSTGRES_PRISMA_URL)"
 }
 
 model Project {
-  id   String @id @default(cuid())
-  name String @unique
+  id      String   @id @default(cuid())
+  name    String   @unique
+  systems Device[]
 }
 
 model System {
-  id   String @id @default(cuid())
-  name String @unique
+  id      String   @id @default(cuid())
+  name    String   @unique
+  devices Device[]
 }
 
 model Device {
-  id        String @id @default(cuid())
+  id        String   @id @default(cuid())
   name      String
   location  String
   ipAddress String
@@ -27,4 +28,8 @@ model Device {
   gateway   String
   status    String
   system    String
+  Project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?
+  System    System?  @relation(fields: [systemId], references: [id])
+  systemId  String?
 }
