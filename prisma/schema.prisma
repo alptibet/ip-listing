@@ -11,13 +11,7 @@ datasource db {
 model Project {
   id      String   @id @default(cuid())
   name    String   @unique
-  systems Device[]
-}
-
-model System {
-  id      String   @id @default(cuid())
-  name    String   @unique
-  devices Device[]
+  Devices Device[]
 }
 
 model Device {
@@ -30,6 +24,4 @@ model Device {
   status    String
   Project   Project? @relation(fields: [projectId], references: [id])
   projectId String?
-  System    System?  @relation(fields: [systemId], references: [id])
-  systemId  String?
 }

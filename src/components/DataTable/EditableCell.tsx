@@ -39,7 +39,7 @@ export default function EditableCell({
     setCellData(initValue);
   }, [initValue]);
 
-  if (tableMeta?.editedRows[row.id]) {
+  if (tableMeta?.editedRows[row.index]) {
     return columnMeta?.type === 'select' ? (
       <Select onValueChange={onSelectChange}>
         <SelectTrigger>
