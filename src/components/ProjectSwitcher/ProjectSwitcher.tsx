@@ -1,4 +1,5 @@
 'use client';
+import useSWR from 'swr';
 import { useState } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -41,6 +42,20 @@ const initialProject: Project = {
   id: '',
   name: 'Select project',
 };
+
+const deneme = async function() {
+  try {
+    const data = await fetch('api/projects');
+    const res = await data.json();
+    console.log(res);
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const ttt = deneme();
+console.log(ttt);
 
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);

@@ -1,4 +1,3 @@
-import { Device, columns } from '@/components/DataTable/Columns';
 import { DataTable } from '@/components/DataTable/DataTable';
 
 export default function DashboardPage() {
