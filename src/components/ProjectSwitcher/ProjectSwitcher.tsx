@@ -1,6 +1,5 @@
 'use client';
-import useSWR from 'swr';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import {
@@ -38,30 +37,55 @@ type Project = {
   name: string;
 };
 
+type NewProject = {
+  name: string;
+};
+
 const initialProject: Project = {
   id: '',
   name: 'Select project',
 };
 
-const deneme = async function() {
-  try {
-    const data = await fetch('api/projects');
-    const res = await data.json();
-    console.log(res);
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const ttt = deneme();
-console.log(ttt);
-
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+  const [projects, setProjects] = useState([{ id: '', name: '' }]);
+  const [newProject, setNewProject] = useState<NewProject>({ name: '' });
+  const [error, setError] = useState('');
   const [selectedProject, setSelectedProject] =
     useState<Project>(initialProject);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const response = await fetch('http://localhost:3000/api/projects');
+        const projects = await response.json();
+        setProjects(projects);
+      } catch (error) {
+        throw new Error('There was an error fetching projects');
+      }
+    }
+    fetchProjects();
+  }, [showPopover]);
+
+  async function addProject() {
+    try {
+      const response = await fetch('http://localhost:3000/api/projects', {
+        method: 'POST',
+        body: JSON.stringify(newProject),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        const error = errorResponse.message;
+        setError(error);
+      }
+    } catch (error) {
+      throw new Error('There was an error creating project');
+    }
+  }
 
   return (
     <Dialog open={showNewProjectDialog} onOpenChange={setShowNewProjectDialog}>
@@ -84,7 +108,7 @@ export default function ProjectSwitcher() {
               <CommandInput placeholder="Search project..." />
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup heading="Projects">
-                {DUMMY_DATA.projects.map((project) => (
+                {projects.map((project) => (
                   <CommandItem
                     className="text-sm flex items-center justify-between"
                     key={project.id}
@@ -94,7 +118,7 @@ export default function ProjectSwitcher() {
                     }}
                   >
                     {project.name}
-                    <CheckIcon //will later change according to real data
+                    <CheckIcon
                       className={cn(
                         selectedProject.name === project.name
                           ? 'opacity-100'
@@ -133,35 +157,32 @@ export default function ProjectSwitcher() {
         </DialogHeader>
         <div className="space-y-2">
           <Label htmlFor="name">Project Name</Label>
-          <Input id="name" placeholder="Project name" />
+          <Input
+            id="name"
+            placeholder="Project name"
+            value={newProject.name}
+            onChange={(e) => {
+              setNewProject({ name: e.target.value });
+            }}
+          />
         </div>
-        <DialogFooter>
-          <Button
-            variant="destructive"
-            onClick={() => setShowNewProjectDialog(false)}
-          >
-            Cancel
-          </Button>
-          <Button type="submit">Submit</Button>
+        <DialogFooter className="mr-auto flex items-center justify-between">
+          <div className="flex gap-2">
+            <Button onClick={addProject}>Submit</Button>
+            <Button
+              variant="destructive"
+              onClick={() => setShowNewProjectDialog(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+          {error && (
+            <div>
+              <p className="text-xs text-red-500">{error}</p>
+            </div>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
-//DELETE DUMMY DATA later
-const DUMMY_DATA = {
-  projects: [
-    {
-      id: 'a',
-      name: 'Radisson',
-    },
-    {
-      id: 'b',
-      name: 'OVC',
-    },
-    {
-      id: 'c',
-      name: 'REKA2',
-    },
-  ],
-};

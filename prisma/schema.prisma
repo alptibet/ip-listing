@@ -10,14 +10,14 @@ datasource db {
 
 model Project {
   id      String   @id @default(cuid())
-  name    String   @unique
+  name    String   @unique @db.VarChar(16)
   Devices Device[]
 }
 
 model Device {
   id        String   @id @default(cuid())
-  name      String
-  location  String
+  name      String  @unique @db.VarChar(16)
+  location  String  @unique @db.VarChar(16)
   ipAddress String
   subnet    String
   gateway   String

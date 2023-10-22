@@ -120,7 +120,6 @@ export function DataTable() {
         const newData = oldData.filter(
           (_row: Device, index: number) => index !== rowIndex
         );
-        console.log(newData);
         setData(newData);
         setOriginalData(newData);
         setRowSelection({});
@@ -150,9 +149,9 @@ export function DataTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}

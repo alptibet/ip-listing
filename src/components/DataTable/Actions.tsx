@@ -27,11 +27,11 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
 
   const addRow = table.options.meta?.addRow;
 
-  const removeRow = function() {
+  const removeRow = function () {
     tableMeta?.removeRow(tableRow.index);
   };
 
-  const setEditedRows = function(e: React.SyntheticEvent) {
+  const setEditedRows = function (e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
     table.options.meta?.setEditedRows((old: []) => ({
       ...old,
@@ -74,11 +74,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <Separator />
-        <DropdownMenuItem
-          onClick={() => console.log(table.options.meta?.editedRows)}
-        >
-          Copy IP Address
-        </DropdownMenuItem>
+        <DropdownMenuItem>Copy IP Address</DropdownMenuItem>
         <DropdownMenuItem onClick={addRow}>Add Row</DropdownMenuItem>
         <DropdownMenuItem
           id="edit"

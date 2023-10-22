@@ -1,7 +1,9 @@
 -- Get projects data from DB, remove dummy data
---Complete add project functionality
---Do not toggle visibility row actions
---add hyperlinks to ip addresses
+-- Complete add project functionality
+-- Do not toggle visibility row actions
+-- add hyperlinks to ip addresses
 -- import from excel
 -- warning when there is an edit
--- deploy
+-- if on homepagw when project selected goto dashboard
+-- implement zod for ip fields entry
+-- handle errors
