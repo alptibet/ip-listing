@@ -16,12 +16,13 @@ model Project {
 
 model Device {
   id        String   @id @default(cuid())
-  name      String  @unique @db.VarChar(16)
-  location  String  @unique @db.VarChar(16)
+  name      String   @db.VarChar(16)
+  location  String   @db.VarChar(16)
   ipAddress String
   subnet    String
   gateway   String
   status    String
+  system    String
   Project   Project? @relation(fields: [projectId], references: [id])
   projectId String?
 }

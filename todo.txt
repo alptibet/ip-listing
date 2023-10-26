@@ -5,5 +5,7 @@
 -- import from excel
 -- warning when there is an edit
 -- if on homepagw when project selected goto dashboard
+-- better way to get projects
 -- implement zod for ip fields entry
 -- handle errors
+-- remove project 
