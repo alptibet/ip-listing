@@ -1,4 +1,6 @@
 'use client';
+
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -51,9 +53,16 @@ export default function ProjectSwitcher() {
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
   const [projects, setProjects] = useState([{ id: '', name: '' }]);
   const [newProject, setNewProject] = useState<NewProject>({ name: '' });
+  const [isEditedProjects, setIsEditedProjects] = useState(false);
   const [error, setError] = useState('');
   const [selectedProject, setSelectedProject] =
     useState<Project>(initialProject);
+
+  const router = useRouter();
+
+  function handleRoute(path: string) {
+    router.push(path);
+  }
 
   useEffect(() => {
     async function fetchProjects() {
@@ -66,9 +75,10 @@ export default function ProjectSwitcher() {
       }
     }
     fetchProjects();
-  }, [showPopover]);
+  }, [isEditedProjects]);
 
   async function addProject() {
+    setIsEditedProjects(true);
     try {
       const response = await fetch('http://localhost:3000/api/projects', {
         method: 'POST',
@@ -84,6 +94,8 @@ export default function ProjectSwitcher() {
       }
     } catch (error) {
       throw new Error('There was an error creating project');
+    } finally {
+      setIsEditedProjects(false);
     }
   }
 
@@ -115,6 +127,7 @@ export default function ProjectSwitcher() {
                     onSelect={() => {
                       setSelectedProject(project);
                       setShowPopover(false);
+                      handleRoute(`/dashboard/${project.name.toLowerCase()}`);
                     }}
                   >
                     {project.name}
@@ -162,7 +175,7 @@ export default function ProjectSwitcher() {
             placeholder="Project name"
             value={newProject.name}
             onChange={(e) => {
-              setNewProject({ name: e.target.value });
+              setNewProject({ name: e.target.value.toUpperCase() });
             }}
           />
         </div>

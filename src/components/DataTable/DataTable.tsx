@@ -42,7 +42,8 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export function DataTable() {
+export function DataTable({ project }: any) {
+  console.log(project);
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'ipAddress', desc: false },
   ]);
