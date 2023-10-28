@@ -1,5 +1,5 @@
 import { Input } from '../ui/input';
-import { Table } from '@tanstack/react-table';
+import { Table, getFacetedUniqueValues } from '@tanstack/react-table';
 import FacetedFilter from './FacetedFilter';
 import ViewOptions from './ViewOptions';
 import { Button } from '../ui/button';
@@ -13,17 +13,19 @@ export default function TableToolbar<TData>({
 }: TableToolBarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
-  const handleRemove = function() {
+  const handleRemove = function () {
     table.options.meta?.removeSelectedRows(
       table.getSelectedRowModel().rows.map((row) => row.index)
     );
     table.resetRowSelection();
   };
 
-  const handleAddDevice = function() {
+  const handleAddDevice = function () {
     table.options.meta?.addRow();
   };
-
+  const systems = table.getColumn('system')?.getFacetedUniqueValues();
+  const deneme = [...systems.keys()];
+  console.log(systems);
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2 my-2">
