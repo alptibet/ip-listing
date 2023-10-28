@@ -33,6 +33,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '../ui/skeleton';
 
 type Project = {
   id: string;
@@ -51,6 +52,7 @@ const initialProject: Project = {
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState([{ id: '', name: '' }]);
   const [newProject, setNewProject] = useState<NewProject>({ name: '' });
   const [isEditedProjects, setIsEditedProjects] = useState(false);
@@ -66,12 +68,15 @@ export default function ProjectSwitcher() {
 
   useEffect(() => {
     async function fetchProjects() {
+      setIsLoading(true);
       try {
         const response = await fetch('http://localhost:3000/api/projects');
         const projects = await response.json();
         setProjects(projects);
       } catch (error) {
         throw new Error('There was an error fetching projects');
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchProjects();
@@ -120,26 +125,39 @@ export default function ProjectSwitcher() {
               <CommandInput placeholder="Search project..." />
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup heading="Projects">
-                {projects.map((project) => (
-                  <CommandItem
-                    className="text-sm flex items-center justify-between"
-                    key={project.id}
-                    onSelect={() => {
-                      setSelectedProject(project);
-                      setShowPopover(false);
-                      handleRoute(`/dashboard/${project.name.toLowerCase()}`);
-                    }}
-                  >
-                    {project.name}
-                    <CheckIcon
-                      className={cn(
-                        selectedProject.name === project.name
-                          ? 'opacity-100'
-                          : 'opacity-0'
-                      )}
-                    />
-                  </CommandItem>
-                ))}
+                {projects.map((project) => {
+                  if (!isLoading) {
+                    return (
+                      <CommandItem
+                        key={project.id}
+                        className="text-sm flex items-center justify-between"
+                        onSelect={() => {
+                          setSelectedProject(project);
+                          setShowPopover(false);
+                          handleRoute(
+                            `/dashboard/${project.name.toLowerCase()}`
+                          );
+                        }}
+                      >
+                        {project.name}
+                        <CheckIcon
+                          className={cn(
+                            selectedProject.name === project.name
+                              ? 'opacity-100'
+                              : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    );
+                  } else {
+                    return (
+                      <Skeleton
+                        key={project.id}
+                        className="w-[100px] h-[20px] rounded-full"
+                      />
+                    );
+                  }
+                })}
               </CommandGroup>
             </CommandList>
             <CommandSeparator />

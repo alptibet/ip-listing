@@ -6,3 +6,4 @@
 -- implement zod for ip fields entry
 -- handle errors
 -- remove project 
+-- filter values must be dynamic

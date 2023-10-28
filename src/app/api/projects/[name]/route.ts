@@ -9,9 +9,9 @@ export async function GET(
   try {
     const project = await prisma.project.findUnique({
       where: { name: params.name },
-      select: { devices: true },
+      select: { devices: true, name: true },
     });
-    return NextResponse.json([project], { status: 200 });
+    return NextResponse.json(project?.devices, { status: 200 });
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
     return NextResponse.json(
       {

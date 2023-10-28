@@ -28,7 +28,6 @@ import {
 import { Dispatch, SetStateAction, useState } from 'react';
 import TableToolbar from './TableToolbar';
 import { Device, columns } from './Columns';
-import DUMMY_DEVICES from '@/lib/DUMMY_DATA';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -43,15 +42,14 @@ declare module '@tanstack/react-table' {
 }
 
 export function DataTable({ project }: any) {
-  console.log(project);
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'ipAddress', desc: false },
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState(() => [...DUMMY_DEVICES]);
-  const [originalData, setOriginalData] = useState(() => [...DUMMY_DEVICES]);
+  const [data, setData] = useState(() => [...project]);
+  const [originalData, setOriginalData] = useState(() => [...project]);
   const [editedRows, setEditedRows] = useState({});
 
   const table = useReactTable({
@@ -150,9 +148,9 @@ export function DataTable({ project }: any) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

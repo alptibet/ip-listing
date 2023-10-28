@@ -25,6 +25,10 @@ export default function TestPage({
     fetchProjects();
   }, [name]);
 
+  if (!project) {
+    return <div>LOADING PROJECT</div>;
+  }
+
   return (
     <div className="mx-2 my-2">
       <DataTable project={project} />
