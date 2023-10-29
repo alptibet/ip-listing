@@ -13,14 +13,14 @@ export default function TableToolbar<TData>({
 }: TableToolBarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
-  const handleRemove = function () {
+  const handleRemove = function() {
     table.options.meta?.removeSelectedRows(
       table.getSelectedRowModel().rows.map((row) => row.index)
     );
     table.resetRowSelection();
   };
 
-  const handleAddDevice = function () {
+  const handleAddDevice = function() {
     table.options.meta?.addRow();
   };
 
