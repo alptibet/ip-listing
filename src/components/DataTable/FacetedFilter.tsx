@@ -18,7 +18,7 @@ import { Column } from '@tanstack/react-table';
 type FacetedFilterProps<TData, TValue> = {
   title?: string;
   column?: Column<TData, TValue>;
-  filterOptions: { option: string }[];
+  filterOptions: string[] | undefined;
 };
 
 export default function FacetedFilter<TData, TValue>({
@@ -54,14 +54,14 @@ export default function FacetedFilter<TData, TValue>({
                   </Badge>
                 ) : (
                   filterOptions
-                    .filter((option) => selectedValues.has(option.option))
+                    ?.filter((option) => selectedValues.has(option))
                     .map((option) => (
                       <Badge
                         variant="secondary"
-                        key={option.option}
+                        key={option}
                         className="rounded-sm px-1 font-normal"
                       >
-                        {option.option}
+                        {option}
                       </Badge>
                     ))
                 )}
@@ -75,16 +75,16 @@ export default function FacetedFilter<TData, TValue>({
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
-              {filterOptions.map((option) => {
-                const isSelected = selectedValues.has(option.option);
+              {filterOptions?.map((option) => {
+                const isSelected = selectedValues.has(option);
                 return (
                   <CommandItem
-                    key={option.option}
+                    key={option}
                     onSelect={() => {
                       if (isSelected) {
-                        selectedValues.delete(option.option);
+                        selectedValues.delete(option);
                       } else {
-                        selectedValues.add(option.option);
+                        selectedValues.add(option);
                       }
                       const filterValues = Array.from(selectedValues);
                       column?.setFilterValue(
@@ -103,10 +103,10 @@ export default function FacetedFilter<TData, TValue>({
                       <CheckIcon className={cn('h-4 w-4')} />
                     </div>
 
-                    <span>{option.option}</span>
-                    {facets?.get(option.option) && (
+                    <span>{option}</span>
+                    {facets?.get(option) && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
-                        {facets.get(option.option)}
+                        {facets.get(option)}
                       </span>
                     )}
                   </CommandItem>

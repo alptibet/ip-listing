@@ -1,5 +1,5 @@
 import { Input } from '../ui/input';
-import { Table, getFacetedUniqueValues } from '@tanstack/react-table';
+import { Table } from '@tanstack/react-table';
 import FacetedFilter from './FacetedFilter';
 import ViewOptions from './ViewOptions';
 import { Button } from '../ui/button';
@@ -23,9 +23,18 @@ export default function TableToolbar<TData>({
   const handleAddDevice = function () {
     table.options.meta?.addRow();
   };
+
   const systems = table.getColumn('system')?.getFacetedUniqueValues();
-  const deneme = [...systems.keys()];
-  console.log(systems);
+  const status = table.getColumn('status')?.getFacetedUniqueValues();
+  let systemOptions;
+  let statusOptions;
+  if (systems) {
+    systemOptions = Array.from(systems.keys());
+  }
+  if (status) {
+    statusOptions = Array.from(status.keys());
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2 my-2">
@@ -50,12 +59,12 @@ export default function TableToolbar<TData>({
         <FacetedFilter
           title="Filter Systems"
           column={table.getColumn('system')}
-          filterOptions={DUMMY_SYSTEMS.systems}
+          filterOptions={systemOptions}
         />
         <FacetedFilter
           title="Filter Status"
           column={table.getColumn('status')}
-          filterOptions={DUMMY_STATUS.statuses}
+          filterOptions={statusOptions}
         />
         {isFiltered && (
           <Button
@@ -77,29 +86,3 @@ export default function TableToolbar<TData>({
     </div>
   );
 }
-
-//delete these later
-const DUMMY_SYSTEMS = {
-  systems: [
-    {
-      option: 'KNX',
-    },
-    {
-      option: 'CCTV',
-    },
-    {
-      option: 'HVAC',
-    },
-  ],
-};
-
-const DUMMY_STATUS = {
-  statuses: [
-    {
-      option: 'Assigned',
-    },
-    {
-      option: 'Not Assigned',
-    },
-  ],
-};

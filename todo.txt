@@ -5,5 +5,4 @@
 -- if on homepage when project selected goto dashboard
 -- implement zod for ip fields entry
 -- handle errors
--- remove project 
--- filter values must be dynamic
+-- remove project

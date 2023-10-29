@@ -148,9 +148,9 @@ export function DataTable({ project }: any) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
@@ -180,7 +180,7 @@ export function DataTable({ project }: any) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Project empty.
                 </TableCell>
               </TableRow>
             )}
