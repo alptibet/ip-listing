@@ -26,11 +26,11 @@ export default function EditableCell({
   const tableMeta = table.options.meta;
   const [cellData, setCellData] = useState(initValue);
 
-  const onBlur = function() {
+  const onBlur = function () {
     tableMeta?.editRow(row.index, column.id, cellData as string);
   };
 
-  const onSelectChange = (value: string) => {
+  const onSelectChange = function (value: string) {
     setCellData(value);
     tableMeta?.editRow(row.index, column.id, value);
   };
