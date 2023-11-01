@@ -2,7 +2,5 @@
 -- add hyperlinks to ip addresses
 -- import from excel
 -- warning when there is an edit
--- if on homepage when project selected goto dashboard
 -- implement zod for ip fields entry
--- handle errors
 -- remove project

@@ -28,6 +28,7 @@ import {
 import { Dispatch, SetStateAction, useState } from 'react';
 import TableToolbar from './TableToolbar';
 import { Device, columns } from './Columns';
+import { Rows } from 'lucide-react';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -51,6 +52,7 @@ export function DataTable({ project }: any) {
   const [data, setData] = useState(() => [...project]);
   const [originalData, setOriginalData] = useState(() => [...project]);
   const [editedRows, setEditedRows] = useState({});
+  // console.log(editedRows);
 
   const table = useReactTable({
     data,
@@ -148,9 +150,9 @@ export function DataTable({ project }: any) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
