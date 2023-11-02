@@ -25,18 +25,20 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const tableMeta = table.options.meta;
 
-  const addRow = table.options.meta?.addRow;
+  const addRow = tableMeta?.addRow;
 
   const removeRow = function () {
     tableMeta?.removeRow(tableRow.index);
   };
 
-  const setEditedRows = function (e: React.SyntheticEvent) {
+  const setInEditMode = function (e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
-    table.options.meta?.setEditedRows((old: []) => ({
+
+    tableMeta?.setInEditMode((old: []) => ({
       ...old,
-      [tableRow.id]: tableRow.original,
+      [tableRow.index]: !old[tableRow.index],
     }));
+
     if (elementName !== 'edit') {
       tableMeta?.revertData(tableRow.index, e.currentTarget.id === 'cancel');
     }
@@ -47,7 +49,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       <Button
         onClick={(e) => {
           setViewEditActions(false);
-          setEditedRows(e);
+          setInEditMode(e);
         }}
         id="done"
       >
@@ -58,7 +60,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         variant="destructive"
         onClick={(e) => {
           setViewEditActions(false);
-          setEditedRows(e);
+          setInEditMode(e);
         }}
       >
         <CrossCircledIcon />
@@ -80,7 +82,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
           id="edit"
           onClick={(e) => {
             setViewEditActions(true);
-            setEditedRows(e);
+            setInEditMode(e);
           }}
         >
           Edit Item

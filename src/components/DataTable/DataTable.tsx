@@ -36,8 +36,8 @@ declare module '@tanstack/react-table' {
     removeRow: (rowIndex: number) => void;
     removeSelectedRows: (selectedRow: number[]) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
-    editedRows: {};
-    setEditedRows: Dispatch<SetStateAction<{}>>;
+    inEditMode: {};
+    setInEditMode: Dispatch<SetStateAction<{}>>;
   }
 }
 
@@ -48,8 +48,7 @@ export function DataTable({ project }: any) {
   const [rowSelection, setRowSelection] = useState({});
   const [data, setData] = useState(() => [...project]);
   const [originalData, setOriginalData] = useState(() => [...project]);
-  const [editedRows, setEditedRows] = useState({});
-
+  const [inEditMode, setInEditMode] = useState({});
   const table = useReactTable({
     data,
     columns,
@@ -71,8 +70,8 @@ export function DataTable({ project }: any) {
       rowSelection,
     },
     meta: {
-      editedRows,
-      setEditedRows,
+      inEditMode: inEditMode,
+      setInEditMode: setInEditMode,
       revertData: (rowIndex: number, revert: boolean) => {
         if (revert) {
           setData((old) =>
@@ -131,7 +130,7 @@ export function DataTable({ project }: any) {
       },
     },
   });
-
+  console.log(inEditMode);
   return (
     <>
       <TableToolbar table={table} />

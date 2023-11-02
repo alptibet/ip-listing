@@ -85,9 +85,6 @@ export default function TableToolbar<TData>({
           </Button>
         </div>
         <div className="ml-auto flex gap-2">
-          <Button variant="destructive" className="font-bold">
-            Discard Changes
-          </Button>
           <Button className="font-bold">Save Changes</Button>
         </div>
       </div>
