@@ -31,12 +31,6 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     tableMeta?.removeRow(tableRow.index);
   };
 
-  const setEditedRows = function (e: React.SyntheticEvent) {
-    const elementName = e.currentTarget.id;
-
-    tableMeta?.setEditedRows((old: Device[]) => [...old, tableRow.original]);
-  };
-
   const setInEditMode = function (e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
 
@@ -56,7 +50,6 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         onClick={(e) => {
           setViewEditActions(false);
           setInEditMode(e);
-          setEditedRows(e);
         }}
         id="done"
       >

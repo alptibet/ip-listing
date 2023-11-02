@@ -24,19 +24,6 @@ export default function TableToolbar<TData>({
     table.options.meta?.addRow();
   };
 
-  const handleSaveChanges = function () {
-    const editedRows = table.options.meta?.editedRows;
-    console.log(editedRows);
-
-    editedRows?.forEach((item) => {
-      if (item.hasOwnProperty('id')) {
-        console.log(item, ' will patch this');
-      } else {
-        console.log(item, ' will create this');
-      }
-    });
-  };
-
   const systems = table.getColumn('system')?.getFacetedUniqueValues();
   const status = table.getColumn('status')?.getFacetedUniqueValues();
   let systemOptions;
@@ -91,17 +78,10 @@ export default function TableToolbar<TData>({
         <ViewOptions table={table} />
       </div>
       <div className="flex gap-2 mb-4">
-        <div className="flex gap-2">
-          <Button onClick={handleAddDevice}>Add Device</Button>
-          <Button variant="destructive" onClick={handleRemove}>
-            Remove Selected
-          </Button>
-        </div>
-        <div className="ml-auto flex gap-2">
-          <Button onClick={handleSaveChanges} className="font-bold">
-            Save Changes
-          </Button>
-        </div>
+        <Button onClick={handleAddDevice}>Add Device</Button>
+        <Button variant="destructive" onClick={handleRemove}>
+          Remove Selected
+        </Button>
       </div>
     </div>
   );
