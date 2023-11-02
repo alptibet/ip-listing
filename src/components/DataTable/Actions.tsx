@@ -44,12 +44,22 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     }
   };
 
+  const saveRow = function () {
+    console.log(tableRow.original);
+    if (tableRow.original.hasOwnProperty('id')) {
+      console.log('This will be patched');
+    } else {
+      console.log('This will be created');
+    }
+  };
+
   return viewEditActions ? (
     <div className="flex gap-2">
       <Button
         onClick={(e) => {
           setViewEditActions(false);
           setInEditMode(e);
+          saveRow();
         }}
         id="done"
       >
