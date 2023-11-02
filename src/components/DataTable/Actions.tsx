@@ -45,7 +45,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     }
   };
 
-  const saveRow = async function () {
+  const handleSave = async function () {
     const newDevice = {
       ...tableRow.original,
       projectId: tableMeta?.project.id,
@@ -96,13 +96,38 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     }
   };
 
+  const handleDelete = async function () {
+    const projectName = tableMeta?.project.name;
+    const deviceId = tableRow?.original.id;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/projects/${projectName}`,
+        {
+          method: 'DELETE',
+          body: JSON.stringify(deviceId),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        const error = errorResponse.message;
+        setError(error);
+      }
+    } catch (error) {
+      throw new Error('There was an error creating project');
+    } finally {
+    }
+  };
+
   return viewEditActions ? (
     <div className="flex gap-2">
       <Button
         onClick={(e) => {
           setViewEditActions(false);
           setInEditMode(e);
-          saveRow();
+          handleSave();
         }}
         id="done"
       >
@@ -140,7 +165,13 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         >
           Edit Item
         </DropdownMenuItem>
-        <DropdownMenuItem id="remove" onClick={removeRow}>
+        <DropdownMenuItem
+          id="remove"
+          onClick={() => {
+            handleDelete();
+            removeRow();
+          }}
+        >
           Delete Item
         </DropdownMenuItem>
       </DropdownMenuContent>

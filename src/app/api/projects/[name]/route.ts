@@ -58,3 +58,22 @@ export async function PATCH(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const body = await req.json();
+  try {
+    const updateDevice = await prisma.device.delete({
+      where: {
+        id: body,
+      },
+    });
+    return NextResponse.json({ updateDevice }, { status: 201 });
+  } catch (error: Prisma.PrismaClientKnownRequestError | any) {
+    return NextResponse.json(
+      {
+        message: error.message,
+      },
+      { status: 400 }
+    );
+  }
+}
