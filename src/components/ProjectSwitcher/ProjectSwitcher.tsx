@@ -62,6 +62,7 @@ export default function ProjectSwitcher() {
 
   const router = useRouter();
   const params = useParams();
+  const projectName = params.name.toString().toUpperCase();
 
   function handleRoute(path: string) {
     router.push(path);
@@ -116,9 +117,7 @@ export default function ProjectSwitcher() {
             aria-label="Search project"
             className="font-semibold w-[200px] justify-between"
           >
-            {params.name
-              ? params.name.toString().toUpperCase()
-              : 'Select project'}
+            {params.name ? projectName : 'Select project'}
             <CaretSortIcon />
           </Button>
         </PopoverTrigger>
@@ -145,7 +144,7 @@ export default function ProjectSwitcher() {
                         {project.name}
                         <CheckIcon
                           className={cn(
-                            selectedProject.name === project.name
+                            projectName === project.name
                               ? 'opacity-100'
                               : 'opacity-0'
                           )}
