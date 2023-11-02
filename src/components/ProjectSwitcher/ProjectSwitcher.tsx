@@ -57,8 +57,6 @@ export default function ProjectSwitcher() {
   const [newProject, setNewProject] = useState<NewProject>({ name: '' });
   const [isEditedProjects, setIsEditedProjects] = useState(false);
   const [error, setError] = useState('');
-  const [selectedProject, setSelectedProject] =
-    useState<Project>(initialProject);
 
   const router = useRouter();
   const params = useParams();
