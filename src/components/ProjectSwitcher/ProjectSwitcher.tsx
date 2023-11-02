@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
@@ -61,6 +61,7 @@ export default function ProjectSwitcher() {
     useState<Project>(initialProject);
 
   const router = useRouter();
+  const params = useParams();
 
   function handleRoute(path: string) {
     router.push(path);
@@ -115,7 +116,9 @@ export default function ProjectSwitcher() {
             aria-label="Search project"
             className="font-semibold w-[200px] justify-between"
           >
-            {selectedProject.name ? selectedProject.name : 'Select project'}
+            {params.name
+              ? params.name.toString().toUpperCase()
+              : 'Select project'}
             <CaretSortIcon />
           </Button>
         </PopoverTrigger>

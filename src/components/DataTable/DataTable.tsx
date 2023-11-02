@@ -49,7 +49,6 @@ export function DataTable({ project }: any) {
   const [data, setData] = useState(() => [...project]);
   const [originalData, setOriginalData] = useState(() => [...project]);
   const [editedRows, setEditedRows] = useState({});
-  console.log(editedRows);
 
   const table = useReactTable({
     data,
