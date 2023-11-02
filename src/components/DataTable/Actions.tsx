@@ -33,7 +33,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
 
   const setEditedRows = function (e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
-    console.log(elementName);
+
     tableMeta?.setEditedRows((old: Device[]) => [...old, tableRow.original]);
   };
 

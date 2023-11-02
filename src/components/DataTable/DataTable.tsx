@@ -135,7 +135,7 @@ export function DataTable({ project }: any) {
       },
     },
   });
-  console.log(editedRows);
+
   return (
     <>
       <TableToolbar table={table} />
