@@ -11,7 +11,7 @@ export default function TestPage({
   const [project, setProject] = useState();
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchProject() {
       try {
         const response = await fetch(
           `http://localhost:3000/api/projects/${name.toUpperCase()}`
@@ -22,7 +22,7 @@ export default function TestPage({
         throw new Error('There was an error fetching projects');
       }
     }
-    fetchProjects();
+    fetchProject();
   }, [name]);
 
   if (!project) {

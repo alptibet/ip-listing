@@ -39,11 +39,10 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         setError(error);
       }
     } catch (error) {
-      throw new Error('There was an error creating project');
+      throw new Error('There was an error deleting project');
     } finally {
     }
 
-    console.log(itemsToDelete);
     table.options.meta?.removeSelectedRows(
       table.getSelectedRowModel().rows.map((row) => row.index)
     );
