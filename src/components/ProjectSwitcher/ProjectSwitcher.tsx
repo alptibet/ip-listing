@@ -55,7 +55,7 @@ export default function ProjectSwitcher() {
 
   const router = useRouter();
   const params = useParams();
-  const projectName = params.name.toString().toUpperCase();
+  const projectName = params.name?.toString().toUpperCase();
 
   function handleRoute(path: string) {
     router.push(path);
