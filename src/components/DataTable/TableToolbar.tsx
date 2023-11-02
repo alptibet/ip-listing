@@ -78,10 +78,18 @@ export default function TableToolbar<TData>({
         <ViewOptions table={table} />
       </div>
       <div className="flex gap-2 mb-4">
-        <Button onClick={handleAddDevice}>Add Device</Button>
-        <Button variant="destructive" onClick={handleRemove}>
-          Remove Selected
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleAddDevice}>Add Device</Button>
+          <Button variant="destructive" onClick={handleRemove}>
+            Remove Selected
+          </Button>
+        </div>
+        <div className="ml-auto flex gap-2">
+          <Button variant="destructive" className="font-bold">
+            Discard Changes
+          </Button>
+          <Button className="font-bold">Save Changes</Button>
+        </div>
       </div>
     </div>
   );

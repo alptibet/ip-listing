@@ -4,3 +4,4 @@
 -- warning when there is an edit
 -- implement zod for ip fields entry
 -- remove project
+-- do LOADING PROJECT beautiful
