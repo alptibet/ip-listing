@@ -98,7 +98,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
 
   const handleDelete = async function () {
     const projectName = tableMeta?.project.name;
-    const deviceId = tableRow?.original.id;
+    const deviceId = [tableRow?.original.id];
     try {
       const response = await fetch(
         `http://localhost:3000/api/projects/${projectName}`,

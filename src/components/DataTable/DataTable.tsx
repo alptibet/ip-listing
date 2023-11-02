@@ -132,6 +132,7 @@ export function DataTable({ project }: any) {
       },
     },
   });
+
   return (
     <>
       <TableToolbar table={table} />

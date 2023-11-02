@@ -3,17 +3,47 @@ import { Table } from '@tanstack/react-table';
 import FacetedFilter from './FacetedFilter';
 import ViewOptions from './ViewOptions';
 import { Button } from '../ui/button';
+import { Device } from './Columns';
+import { useState } from 'react';
 
-type TableToolBarProps<TData> = {
-  table: Table<TData>;
+type TableToolBarProps = {
+  table: Table<Device>;
 };
 
-export default function TableToolbar<TData>({
-  table,
-}: TableToolBarProps<TData>) {
+export default function TableToolbar({ table }: TableToolBarProps) {
+  const [error, setError] = useState();
   const isFiltered = table.getState().columnFilters.length > 0;
+  const tableMeta = table.options.meta;
 
-  const handleRemove = function () {
+  const handleRemove = async function () {
+    const projectName = tableMeta?.project.name;
+    const itemsToDelete = table
+      .getSelectedRowModel()
+      .rows.map((item) => item.original)
+      .map((item) => item.id);
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/projects/${projectName}`,
+        {
+          method: 'DELETE',
+          body: JSON.stringify(itemsToDelete),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        const error = errorResponse.message;
+        setError(error);
+      }
+    } catch (error) {
+      throw new Error('There was an error creating project');
+    } finally {
+    }
+
+    console.log(itemsToDelete);
     table.options.meta?.removeSelectedRows(
       table.getSelectedRowModel().rows.map((row) => row.index)
     );

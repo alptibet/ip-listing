@@ -6,3 +6,4 @@
 -- remove project
 -- do LOADING PROJECT beautiful
 -- implement user feedback while creating editing device
+-- add delete edit handle errors!!
