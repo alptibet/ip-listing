@@ -28,7 +28,6 @@ import {
 import { Dispatch, SetStateAction, useState } from 'react';
 import TableToolbar from './TableToolbar';
 import { Device, columns } from './Columns';
-import { Rows } from 'lucide-react';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -43,16 +42,14 @@ declare module '@tanstack/react-table' {
 }
 
 export function DataTable({ project }: any) {
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: 'ipAddress', desc: false },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [data, setData] = useState(() => [...project]);
   const [originalData, setOriginalData] = useState(() => [...project]);
   const [editedRows, setEditedRows] = useState({});
-  // console.log(editedRows);
+  console.log(editedRows);
 
   const table = useReactTable({
     data,

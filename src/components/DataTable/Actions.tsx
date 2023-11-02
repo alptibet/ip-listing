@@ -35,7 +35,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     const elementName = e.currentTarget.id;
     table.options.meta?.setEditedRows((old: []) => ({
       ...old,
-      [tableRow.index]: !old[tableRow.index],
+      [tableRow.id]: tableRow.original,
     }));
     if (elementName !== 'edit') {
       tableMeta?.revertData(tableRow.index, e.currentTarget.id === 'cancel');
