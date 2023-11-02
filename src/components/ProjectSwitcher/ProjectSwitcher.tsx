@@ -44,11 +44,6 @@ type NewProject = {
   name: string;
 };
 
-const initialProject: Project = {
-  id: '',
-  name: 'Select project',
-};
-
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
@@ -132,7 +127,6 @@ export default function ProjectSwitcher() {
                         key={project.id}
                         className="text-sm flex items-center justify-between"
                         onSelect={() => {
-                          setSelectedProject(project);
                           setShowPopover(false);
                           handleRoute(
                             `/dashboard/${project.name.toLowerCase()}`
