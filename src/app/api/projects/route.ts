@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
     return NextResponse.json(
       {
-        message: 'There is a project with the same name',
+        message: error.message,
       },
       { status: 400 }
     );

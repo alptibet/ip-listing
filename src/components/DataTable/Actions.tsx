@@ -23,6 +23,7 @@ interface ActionsProps<TData> {
 
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
+  const [error, setError] = useState();
   const tableMeta = table.options.meta;
 
   const addRow = tableMeta?.addRow;
@@ -44,12 +45,54 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     }
   };
 
-  const saveRow = function () {
-    console.log(tableRow.original);
+  const saveRow = async function () {
+    const newDevice = {
+      ...tableRow.original,
+      projectId: tableMeta?.project.id,
+    };
+    const projectName = tableMeta?.project.name;
     if (tableRow.original.hasOwnProperty('id')) {
-      console.log('This will be patched');
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/projects/${projectName}`,
+          {
+            method: 'PATCH',
+            body: JSON.stringify(newDevice),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          const error = errorResponse.message;
+          setError(error);
+        }
+      } catch (error) {
+        throw new Error('There was an error creating project');
+      } finally {
+      }
     } else {
-      console.log('This will be created');
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/projects/${projectName}`,
+          {
+            method: 'POST',
+            body: JSON.stringify(newDevice),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          const error = errorResponse.message;
+          setError(error);
+        }
+      } catch (error) {
+        throw new Error('There was an error creating project');
+      } finally {
+      }
     }
   };
 
