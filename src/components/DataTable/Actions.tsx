@@ -21,6 +21,18 @@ interface ActionsProps<TData> {
   table: Table<TData>;
 }
 
+type NewDevice = {
+  projectId: string | undefined;
+  id: string;
+  name: string;
+  location: string;
+  ipAddress: string;
+  subnet: string;
+  gateway: string;
+  status: 'Assigned' | 'Not Assigned';
+  system: string;
+};
+
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const [error, setError] = useState();
@@ -47,9 +59,15 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
 
   const handleSave = async function () {
     const newDevice = {
-      ...tableRow.original,
-      projectId: tableMeta?.project.id,
       id: tableRow.id,
+      name: tableRow.original.name,
+      location: tableRow.original.location,
+      ipAddress: tableRow.original.ipAddress,
+      subnet: tableRow.original.subnet,
+      gateway: tableRow.original.gateway,
+      status: tableRow.original.status,
+      system: tableRow.original.system,
+      projectId: tableMeta?.project.id,
     };
     const projectName = tableMeta?.project.name;
     if (tableRow.original.isNew === false) {
