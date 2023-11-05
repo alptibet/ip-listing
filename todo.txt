@@ -1,9 +1,8 @@
 -- Do not toggle visibility row actions
 -- add hyperlinks to ip addresses
 -- import from excel
--- warning when there is an edit
 -- implement zod for ip fields entry
 -- remove project
 -- do LOADING PROJECT beautiful
 -- implement user feedback while creating editing device
--- add delete edit handle errors!!
+-- implement search
