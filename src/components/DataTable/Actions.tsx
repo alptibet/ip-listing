@@ -49,10 +49,13 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     const newDevice = {
       ...tableRow.original,
       projectId: tableMeta?.project.id,
+      id: tableRow.id,
     };
     const projectName = tableMeta?.project.name;
-    if (tableRow.original.hasOwnProperty('id')) {
+    if (tableRow.original.isNew === false) {
       try {
+        console.log('patching');
+        console.log(newDevice);
         const response = await fetch(
           `http://localhost:3000/api/projects/${projectName}`,
           {
@@ -74,6 +77,8 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       }
     } else {
       try {
+        console.log('posting');
+        console.log(newDevice);
         const response = await fetch(
           `http://localhost:3000/api/projects/${projectName}`,
           {
@@ -92,6 +97,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       } catch (error) {
         throw new Error('There was an error creating project');
       } finally {
+        tableRow.original.isNew = false;
       }
     }
   };

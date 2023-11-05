@@ -8,7 +8,8 @@ import Actions from './Actions';
 import EditableCell from './EditableCell';
 
 export type Device = {
-  id?: string;
+  id: string;
+  isNew: boolean;
   name: string;
   location: string;
   ipAddress: string;

@@ -89,6 +89,8 @@ export function DataTable({ project }: any) {
       },
       addRow: () => {
         const newRow: Device = {
+          id: '',
+          isNew: true,
           name: '',
           location: '',
           ipAddress: '',
