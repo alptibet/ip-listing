@@ -21,18 +21,6 @@ interface ActionsProps<TData> {
   table: Table<TData>;
 }
 
-type NewDevice = {
-  projectId: string | undefined;
-  id: string;
-  name: string;
-  location: string;
-  ipAddress: string;
-  subnet: string;
-  gateway: string;
-  status: 'Assigned' | 'Not Assigned';
-  system: string;
-};
-
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const [error, setError] = useState();
