@@ -58,7 +58,12 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       projectId: tableMeta?.project.id,
     };
     const projectName = tableMeta?.project.name;
-    if (tableRow.original.isNew === false) {
+    console.log(tableRow.original);
+    console.log(tableRow.original.hasOwnProperty('isNew'));
+    if (
+      !tableRow.original.hasOwnProperty('isNew') ||
+      tableRow.original.isNew === false
+    ) {
       try {
         tableMeta?.setLoadToaster(true);
         const response = await fetch(

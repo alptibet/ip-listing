@@ -24,6 +24,7 @@ export async function GET(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  console.log(body);
   try {
     const newDevice = await prisma.device.create({
       data: body,
@@ -41,6 +42,7 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const body = await req.json();
+  console.log(body);
   try {
     const updateDevice = await prisma.device.update({
       where: {
