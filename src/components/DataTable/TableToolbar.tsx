@@ -5,6 +5,7 @@ import ViewOptions from './ViewOptions';
 import { Button } from '../ui/button';
 import { Device } from './Columns';
 import { useState } from 'react';
+import { toast } from '../ui/use-toast';
 
 type TableToolBarProps = {
   table: Table<Device>;
@@ -23,6 +24,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       .map((item) => item.id);
 
     try {
+      tableMeta?.setLoadToaster(true);
       const response = await fetch(
         `http://localhost:3000/api/projects/${projectName}`,
         {
@@ -39,8 +41,17 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         setError(error);
       }
     } catch (error) {
+      toast({
+        description: 'Something went wrong...',
+        duration: 2000,
+      });
       throw new Error('There was an error deleting project');
     } finally {
+      tableMeta?.setLoadToaster(false);
+      toast({
+        description: 'Deleted device(s)',
+        duration: 2000,
+      });
     }
 
     table.options.meta?.removeSelectedRows(

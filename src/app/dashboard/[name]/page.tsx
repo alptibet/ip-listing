@@ -28,7 +28,6 @@ export default function TestPage({
   if (!project) {
     return <div>LOADING PROJECT</div>;
   }
-
   return (
     <div className="mx-2 my-2">
       <DataTable project={project} />

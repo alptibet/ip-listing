@@ -15,6 +15,7 @@ import { Separator } from '@radix-ui/react-separator';
 import type { Device } from './Columns';
 import { Row, Table } from '@tanstack/react-table';
 import { useState } from 'react';
+import { toast } from '../ui/use-toast';
 
 interface ActionsProps<TData> {
   tableRow: Row<Device>;
@@ -25,7 +26,6 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const [error, setError] = useState();
   const tableMeta = table.options.meta;
-
   const addRow = tableMeta?.addRow;
 
   const removeRow = function () {
@@ -60,6 +60,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     const projectName = tableMeta?.project.name;
     if (tableRow.original.isNew === false) {
       try {
+        tableMeta?.setLoadToaster(true);
         const response = await fetch(
           `http://localhost:3000/api/projects/${projectName}`,
           {
@@ -75,12 +76,27 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
           const error = errorResponse.message;
           setError(error);
         }
+        toast({
+          description: 'Saving changes.',
+          duration: 2000,
+        });
       } catch (error) {
+        toast({
+          description: 'Something went wrong...',
+          duration: 2000,
+          variant: 'destructive',
+        });
         throw new Error('There was an error creating project');
       } finally {
+        tableMeta?.setLoadToaster(false);
+        toast({
+          description: 'Changes saved.',
+          duration: 2000,
+        });
       }
     } else {
       try {
+        tableMeta?.setLoadToaster(true);
         const response = await fetch(
           `http://localhost:3000/api/projects/${projectName}`,
           {
@@ -96,10 +112,24 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
           const error = errorResponse.message;
           setError(error);
         }
+        // toast({
+        //   description: 'Saving new device.',
+        //   duration: 2000,
+        // });
       } catch (error) {
+        toast({
+          description: 'Something went wrong...',
+          duration: 3000,
+          variant: 'destructive',
+        });
         throw new Error('There was an error creating project');
       } finally {
         tableRow.original.isNew = false;
+        tableMeta?.setLoadToaster(false);
+        toast({
+          description: 'Saved new device.',
+          duration: 2000,
+        });
       }
     }
   };
@@ -108,6 +138,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     const projectName = tableMeta?.project.name;
     const deviceId = [tableRow?.original.id];
     try {
+      tableMeta?.setLoadToaster(true);
       const response = await fetch(
         `http://localhost:3000/api/projects/${projectName}`,
         {
@@ -124,8 +155,17 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         setError(error);
       }
     } catch (error) {
+      toast({
+        description: 'Something went wrong...',
+        duration: 3000,
+      });
       throw new Error('There was an error creating project');
     } finally {
+      tableMeta?.setLoadToaster(false);
+      toast({
+        description: 'Device deleted.',
+        duration: 2000,
+      });
     }
   };
 
@@ -133,9 +173,9 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     <div className="flex gap-2">
       <Button
         onClick={(e) => {
+          handleSave();
           setViewEditActions(false);
           setInEditMode(e);
-          handleSave();
         }}
         id="done"
       >
