@@ -15,7 +15,7 @@ model Project {
 }
 
 model Device {
-  id        String   @id
+  id        String   @id @default(cuid())
   name      String   @db.VarChar(16)
   location  String   @db.VarChar(16)
   ipAddress String

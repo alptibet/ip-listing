@@ -38,6 +38,7 @@ declare module '@tanstack/react-table' {
     revertData: (rowIndex: number, revert: boolean) => void;
     inEditMode: {};
     setInEditMode: Dispatch<SetStateAction<{}>>;
+    setData: Dispatch<SetStateAction<Device[]>>;
     project: { id: string; name: string };
     loadToaster: boolean;
     setLoadToaster: Dispatch<SetStateAction<boolean>>;
@@ -75,6 +76,7 @@ export function DataTable({ project }: any) {
     },
     meta: {
       project,
+      setData,
       loadToaster,
       setLoadToaster,
       inEditMode,
