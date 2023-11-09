@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Button } from '../ui/button';
 import { toast } from '../ui/use-toast';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 
@@ -54,13 +53,10 @@ export default function DeleteProjectAlert({ projectName }: propTypes) {
   };
 
   return (
-    <div className="mr-auto">
+    <div className="">
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <Button variant="ghost">
-            <CrossCircledIcon className="mr-2 ml-[-16px]" color="red" />
-            Delete selected project
-          </Button>
+          <CrossCircledIcon className="mr-2 h-4 w-4" color="red" />
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>

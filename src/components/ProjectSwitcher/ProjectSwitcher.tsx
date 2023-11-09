@@ -168,6 +168,7 @@ export default function ProjectSwitcher() {
                     </CommandItem>
                     <CommandItem>
                       <DeleteProjectAlert projectName={projectName} />
+                      Delete selected project
                     </CommandItem>
                   </>
                 </DialogTrigger>
