@@ -1,9 +1,7 @@
-import { DataTable } from '@/components/DataTable/DataTable';
-
 export default function DashboardPage() {
   return (
     <div className="mx-2 my-2">
-      <DataTable />
+      <p>DENEME</p>
     </div>
   );
 }
