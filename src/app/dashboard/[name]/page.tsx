@@ -6,7 +6,6 @@ import { Loader2 } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertDialogDescription } from '@radix-ui/react-alert-dialog';
 
 const fetcher = async function (url: string) {
   const response = await fetch(url, {
@@ -43,16 +42,21 @@ export default function DashboardPage({
 
   if (error || !data) {
     return (
-      <Alert variant="destructive" className="ml-2 w-max">
-        <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Error</AlertTitle>
-        {error && <AlertDescription>{error.message}</AlertDescription>}
-        {!data && (
+      <div className="flex items-center justify-center h-screen">
+        <Alert variant="destructive" className="ml-2 w-max">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          {error && <AlertDescription>{error.message}</AlertDescription>}
+          {!data && (
+            <AlertDescription>
+              There was a problem fetching problem {name.toUpperCase()}.
+            </AlertDescription>
+          )}
           <AlertDescription>
-            There was a problem fetching problem {name.toUpperCase()}.
+            Try reloading page or navigate to another project.
           </AlertDescription>
-        )}
-      </Alert>
+        </Alert>
+      </div>
     );
   }
 
