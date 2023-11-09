@@ -11,18 +11,12 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from '../ui/use-toast';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
-import { useRouter } from 'next/navigation';
 
 type propTypes = {
   projectName: string;
-  handleDelete: Function;
 };
 
-export default function DeleteProjectAlert({
-  projectName,
-  handleDelete,
-}: propTypes) {
-  const router = useRouter();
+export default function DeleteProjectAlert({ projectName }: propTypes) {
   const handleDeleteProject = async function (projectName: string) {
     console.log(projectName);
     try {
@@ -47,7 +41,6 @@ export default function DeleteProjectAlert({
         description: 'Project deleted.',
         duration: 3000,
       });
-      router.push('/dashboard');
     } catch (error: any) {
       toast({
         title: 'Something went wrong...',
@@ -56,13 +49,11 @@ export default function DeleteProjectAlert({
         variant: 'destructive',
       });
       throw new Error('There was an error deleting project');
-    } finally {
-      handleDelete();
     }
   };
 
   return (
-    <div>
+    <div className="">
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <CrossCircledIcon className="mr-2 h-4 w-4" color="red" />
