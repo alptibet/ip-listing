@@ -1,81 +1,38 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 import { DataTable } from '@/components/DataTable/DataTable';
 import { Loader2 } from 'lucide-react';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import { AlertCircle } from 'lucide-react';
 
-export default function TestPage({
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertDialogDescription } from '@radix-ui/react-alert-dialog';
+
+const fetcher = async function (url: string) {
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  if (!response.ok) {
+    const error = new Error('An error occured while fetching project data');
+    throw error;
+  }
+  return response.json();
+};
+
+export default function DashboardPage({
   params: { name },
 }: {
   params: { name: string };
 }) {
-  const [project, setProject] = useState();
-  const [error, setError] = useState(null);
-  const [reload, setReload] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { data, error, isLoading } = useSWR(
+    `http://localhost:3000/api/projects/${name.toUpperCase()}`,
+    fetcher
+  );
 
-  useEffect(() => {
-    async function fetchProject() {
-      setLoading(true);
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/projects/${name.toUpperCase()}`
-        );
-        const project = await response.json();
-        if (!response.ok || !project) {
-          const errorResponse = await response.json();
-          const error = errorResponse.message;
-          setError(error);
-        }
-        console.log(project);
-        setProject(project);
-      } catch (error: any) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchProject();
-  }, [name]);
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center">
-        <AlertDialog open={error}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>An error occured.</AlertDialogTitle>
-              <AlertDialogDescription>
-                There was a problem with loading this project. You can either
-                navigate to another project or try to reload this project.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setError(null)}>
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction onClick={() => setReload(true)}>
-                Reload
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    );
-  }
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div>
         <Loader2 className="h4 w-4 animate-spin inline" />
@@ -84,11 +41,24 @@ export default function TestPage({
     );
   }
 
-  if (!loading && !error) {
+  if (error || !data) {
     return (
-      <div className="mx-2 my-2">
-        <DataTable project={project} />
-      </div>
+      <Alert variant="destructive" className="ml-2 w-max">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        {error && <AlertDescription>{error.message}</AlertDescription>}
+        {!data && (
+          <AlertDescription>
+            There was a problem fetching problem {name.toUpperCase()}.
+          </AlertDescription>
+        )}
+      </Alert>
     );
   }
+
+  return (
+    <div className="mx-2 my-2">
+      <DataTable project={data} />
+    </div>
+  );
 }
