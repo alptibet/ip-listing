@@ -24,7 +24,6 @@ export default function DeleteProjectAlert({
 }: propTypes) {
   const router = useRouter();
   const handleDeleteProject = async function (projectName: string) {
-    console.log(projectName);
     try {
       const response = await fetch(`http://localhost:3000/api/projects/`, {
         method: 'DELETE',
