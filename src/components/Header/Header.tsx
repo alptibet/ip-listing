@@ -3,7 +3,6 @@ import ProjectSwitcher from '../ProjectSwitcher/ProjectSwitcher';
 import ThemeToggleButton from '../ThemeToggleButton/ThemeToggleButton';
 import { currentUser } from '@clerk/nextjs/server';
 import UserActions from '../UserActions/UserActions';
-import Search from '../Search/Search';
 
 export default async function Header() {
   const user = await currentUser();
@@ -23,7 +22,6 @@ export default async function Header() {
       </div>
 
       <div className="flex items-center gap-5">
-        <Search />
         <ThemeToggleButton />
         <UserActions loggedInUser={loggedInUser} />
       </div>
