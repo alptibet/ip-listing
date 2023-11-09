@@ -34,6 +34,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import DeleteProjectAlert from '../DeteleProjectAlert/DeleteProjectAlert';
+import { toast } from '../ui/use-toast';
 
 type NewProject = {
   name: string;
@@ -42,10 +43,10 @@ type NewProject = {
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState([{ id: '', name: '' }]);
   const [newProject, setNewProject] = useState<NewProject>({ name: '' });
-  const [isEditedProjects, setIsEditedProjects] = useState(false);
-  const [error, setError] = useState('');
+  const [isEditedProjects, setIsEditedProjects] = useState(true);
 
   const router = useRouter();
   const params = useParams();
@@ -57,19 +58,36 @@ export default function ProjectSwitcher() {
 
   useEffect(() => {
     async function fetchProjects() {
-      try {
-        const response = await fetch('http://localhost:3000/api/projects');
-        const projects = await response.json();
-        setProjects(projects);
-      } catch (error) {
-        throw new Error('There was an error fetching projects');
+      if (isEditedProjects) {
+        setIsLoading(true);
+        try {
+          const response = await fetch('http://localhost:3000/api/projects');
+          const projects = await response.json();
+          setProjects(projects);
+          if (!response.ok) {
+            const errorResponse = await response.json();
+            const error = errorResponse.message;
+            toast({
+              title: 'Error',
+              description: `${error}`,
+              duration: 3000,
+              variant: 'destructive',
+            });
+          }
+        } catch (error) {
+          throw new Error('There was an error fetching projects');
+        } finally {
+          setIsEditedProjects(false);
+          setIsLoading(false);
+        }
+      } else {
+        return;
       }
     }
     fetchProjects();
   }, [isEditedProjects]);
 
   async function addProject() {
-    setIsEditedProjects(true);
     try {
       const response = await fetch('http://localhost:3000/api/projects', {
         method: 'POST',
@@ -81,16 +99,36 @@ export default function ProjectSwitcher() {
       if (!response.ok) {
         const errorResponse = await response.json();
         const error = errorResponse.message;
-        setError(error);
+        toast({
+          title: 'Error',
+          description: `${error}`,
+          duration: 3000,
+          variant: 'destructive',
+        });
       }
-    } catch (error) {
+      toast({
+        description: 'Created project.',
+        duration: 3000,
+      });
+      setIsEditedProjects(true);
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
       throw new Error('There was an error creating project');
     } finally {
-      setIsEditedProjects(false);
+      // setIsEditedProjects(false);
       setShowNewProjectDialog(false);
       router.push(`/dashboard/${newProject.name}`);
     }
   }
+
+  const handleDelete = function () {
+    setIsEditedProjects(true);
+  };
 
   return (
     <Dialog open={showNewProjectDialog} onOpenChange={setShowNewProjectDialog}>
@@ -151,7 +189,10 @@ export default function ProjectSwitcher() {
                       Add Project
                     </CommandItem>
                     <CommandItem>
-                      <DeleteProjectAlert projectName={projectName} />
+                      <DeleteProjectAlert
+                        projectName={projectName}
+                        handleDelete={handleDelete}
+                      />
                       Delete selected project
                     </CommandItem>
                   </>
@@ -189,11 +230,6 @@ export default function ProjectSwitcher() {
               Cancel
             </Button>
           </div>
-          {error && (
-            <div>
-              <p className="text-xs text-red-500">{error}</p>
-            </div>
-          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
