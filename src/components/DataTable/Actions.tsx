@@ -24,9 +24,7 @@ interface ActionsProps<TData> {
 
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
-  const [error, setError] = useState();
   const tableMeta = table.options.meta;
-  const addRow = tableMeta?.addRow;
 
   const removeRow = function () {
     tableMeta?.removeRow(tableRow.index);
@@ -45,63 +43,22 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     }
   };
 
-  const handleSave = async function () {
-    const newDevice = {
-      id: tableRow.id,
-      name: tableRow.original.name,
-      location: tableRow.original.location,
-      ipAddress: tableRow.original.ipAddress,
-      subnet: tableRow.original.subnet,
-      gateway: tableRow.original.gateway,
-      status: tableRow.original.status,
-      system: tableRow.original.system,
-      projectId: tableMeta?.project.id,
-    };
+  const handleAddDevice = function () {
     const projectName = tableMeta?.project.name;
-    console.log(tableRow.original);
-    console.log(tableRow.original.hasOwnProperty('isNew'));
-    if (
-      !tableRow.original.hasOwnProperty('isNew') ||
-      tableRow.original.isNew === false
-    ) {
+    const projectId = tableMeta?.project.id;
+
+    const newDevice = {
+      name: '',
+      location: '',
+      ipAddress: '',
+      subnet: '',
+      gateway: '',
+      status: 'Not Assigned',
+      system: '',
+      projectId,
+    };
+    const newRow = async function (): Promise<Device> {
       try {
-        tableMeta?.setLoadToaster(true);
-        const response = await fetch(
-          `http://localhost:3000/api/projects/${projectName}`,
-          {
-            method: 'PATCH',
-            body: JSON.stringify(newDevice),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!response.ok) {
-          const errorResponse = await response.json();
-          const error = errorResponse.message;
-          setError(error);
-        }
-        toast({
-          description: 'Saving changes.',
-          duration: 2000,
-        });
-      } catch (error) {
-        toast({
-          description: 'Something went wrong...',
-          duration: 2000,
-          variant: 'destructive',
-        });
-        throw new Error('There was an error creating project');
-      } finally {
-        tableMeta?.setLoadToaster(false);
-        toast({
-          description: 'Changes saved.',
-          duration: 2000,
-        });
-      }
-    } else {
-      try {
-        tableMeta?.setLoadToaster(true);
         const response = await fetch(
           `http://localhost:3000/api/projects/${projectName}`,
           {
@@ -115,27 +72,80 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         if (!response.ok) {
           const errorResponse = await response.json();
           const error = errorResponse.message;
-          setError(error);
+          toast({
+            title: 'Error',
+            description: `${error}`,
+            duration: 3000,
+            variant: 'destructive',
+          });
         }
-        // toast({
-        //   description: 'Saving new device.',
-        //   duration: 2000,
-        // });
-      } catch (error) {
+        const data = await response.json();
+        table.options.meta?.addRow(data);
         toast({
-          description: 'Something went wrong...',
+          title: 'New device added.',
+          description: 'You can edit device details now.',
+          duration: 3000,
+        });
+        return data;
+      } catch (error: any) {
+        toast({
+          title: 'Something went wrong...',
+          description: `${error.message}`,
           duration: 3000,
           variant: 'destructive',
         });
         throw new Error('There was an error creating project');
-      } finally {
-        tableRow.original.isNew = false;
-        tableMeta?.setLoadToaster(false);
+      }
+    };
+    newRow();
+  };
+
+  const handleSave = async function () {
+    const editedDevice = {
+      id: tableRow.original.id,
+      name: tableRow.original.name,
+      location: tableRow.original.location,
+      ipAddress: tableRow.original.ipAddress,
+      subnet: tableRow.original.subnet,
+      gateway: tableRow.original.gateway,
+      status: tableRow.original.status,
+      system: tableRow.original.system,
+      projectId: tableMeta?.project.id,
+    };
+    const projectName = tableMeta?.project.name;
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/projects/${projectName}`,
+        {
+          method: 'PATCH',
+          body: JSON.stringify(editedDevice),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        const error = errorResponse.message;
         toast({
-          description: 'Saved new device.',
-          duration: 2000,
+          title: 'Error',
+          description: `${error}`,
+          duration: 3000,
+          variant: 'destructive',
         });
       }
+      toast({
+        description: 'Saving changes.',
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
+      throw new Error('There was an error creating project');
     }
   };
 
@@ -143,7 +153,6 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     const projectName = tableMeta?.project.name;
     const deviceId = [tableRow?.original.id];
     try {
-      tableMeta?.setLoadToaster(true);
       const response = await fetch(
         `http://localhost:3000/api/projects/${projectName}`,
         {
@@ -157,20 +166,25 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       if (!response.ok) {
         const errorResponse = await response.json();
         const error = errorResponse.message;
-        setError(error);
+        toast({
+          title: 'Error',
+          description: `${error}`,
+          duration: 3000,
+          variant: 'destructive',
+        });
       }
-    } catch (error) {
-      toast({
-        description: 'Something went wrong...',
-        duration: 3000,
-      });
-      throw new Error('There was an error creating project');
-    } finally {
-      tableMeta?.setLoadToaster(false);
       toast({
         description: 'Device deleted.',
-        duration: 2000,
+        duration: 3000,
       });
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
+      throw new Error('There was an error creating project');
     }
   };
 
@@ -208,7 +222,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <Separator />
         <DropdownMenuItem>Copy IP Address</DropdownMenuItem>
-        <DropdownMenuItem onClick={addRow}>Add Row</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleAddDevice}>Add Row</DropdownMenuItem>
         <DropdownMenuItem
           id="edit"
           onClick={(e) => {

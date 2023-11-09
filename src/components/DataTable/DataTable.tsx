@@ -32,16 +32,13 @@ import { Device, columns } from './Columns';
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     editRow: (rowIndex: number, columnId: string, value: string) => void;
-    addRow: () => void;
+    addRow: (newRow: Promise<Device>) => void;
     removeRow: (rowIndex: number) => void;
     removeSelectedRows: (selectedRow: number[]) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
     inEditMode: {};
     setInEditMode: Dispatch<SetStateAction<{}>>;
-    setData: Dispatch<SetStateAction<Device[]>>;
     project: { id: string; name: string };
-    loadToaster: boolean;
-    setLoadToaster: Dispatch<SetStateAction<boolean>>;
   }
 }
 
@@ -53,7 +50,6 @@ export function DataTable({ project }: any) {
   const [data, setData] = useState(() => [...project.devices]);
   const [originalData, setOriginalData] = useState(() => [...project.devices]);
   const [inEditMode, setInEditMode] = useState({});
-  const [loadToaster, setLoadToaster] = useState(false);
   const table = useReactTable({
     data,
     columns,
@@ -76,12 +72,9 @@ export function DataTable({ project }: any) {
     },
     meta: {
       project,
-      setData,
-      loadToaster,
-      setLoadToaster,
       inEditMode,
       setInEditMode,
-      revertData: (rowIndex: number, revert: boolean) => {
+      revertData: (rowIndex, revert) => {
         if (revert) {
           setData((old) =>
             old.map((row, index) =>
@@ -94,22 +87,11 @@ export function DataTable({ project }: any) {
           );
         }
       },
-      addRow: () => {
-        const newRow: Device = {
-          id: '',
-          isNew: true,
-          name: '',
-          location: '',
-          ipAddress: '',
-          subnet: '',
-          gateway: '',
-          status: 'Not Assigned',
-          system: '',
-        };
+      addRow: (newRow) => {
         setData((old) => [...old, newRow]);
         setOriginalData((old) => [...old, newRow]);
       },
-      editRow: (rowIndex: number, columnId: string, value: string) => {
+      editRow: (rowIndex, columnId, value) => {
         setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
@@ -122,7 +104,7 @@ export function DataTable({ project }: any) {
           })
         );
       },
-      removeRow: (rowIndex: number) => {
+      removeRow: (rowIndex) => {
         const oldData = [...data];
         const newData = oldData.filter(
           (_row: Device, index: number) => index !== rowIndex
@@ -131,7 +113,7 @@ export function DataTable({ project }: any) {
         setOriginalData(newData);
         setRowSelection({});
       },
-      removeSelectedRows: (selectedRows: number[]) => {
+      removeSelectedRows: (selectedRows) => {
         const oldData = [...data];
         const newData = oldData.filter(
           (_row: Device, index: number) => !selectedRows.includes(index)

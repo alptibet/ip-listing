@@ -24,12 +24,11 @@ export async function GET(
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  console.log(body);
   try {
     const newDevice = await prisma.device.create({
       data: body,
     });
-    return NextResponse.json({ newDevice }, { status: 201 });
+    return NextResponse.json(newDevice, { status: 201 });
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
     return NextResponse.json(
       {
@@ -42,7 +41,6 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const body = await req.json();
-  console.log(body);
   try {
     const updateDevice = await prisma.device.update({
       where: {
@@ -50,7 +48,7 @@ export async function PATCH(req: NextRequest) {
       },
       data: body,
     });
-    return NextResponse.json({ updateDevice }, { status: 201 });
+    return NextResponse.json(updateDevice, { status: 201 });
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
     return NextResponse.json(
       {

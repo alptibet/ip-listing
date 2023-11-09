@@ -12,7 +12,6 @@ type TableToolBarProps = {
 };
 
 export default function TableToolbar({ table }: TableToolBarProps) {
-  const [error, setError] = useState();
   const isFiltered = table.getState().columnFilters.length > 0;
   const tableMeta = table.options.meta;
 
@@ -24,7 +23,6 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       .map((item) => item.id);
 
     try {
-      tableMeta?.setLoadToaster(true);
       const response = await fetch(
         `http://localhost:3000/api/projects/${projectName}`,
         {
@@ -38,20 +36,25 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       if (!response.ok) {
         const errorResponse = await response.json();
         const error = errorResponse.message;
-        setError(error);
+        toast({
+          title: 'Error',
+          description: `${error}`,
+          duration: 3000,
+          variant: 'destructive',
+        });
       }
-    } catch (error) {
       toast({
-        description: 'Something went wrong...',
-        duration: 2000,
+        description: 'Device(s) deleted.',
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
       });
       throw new Error('There was an error deleting project');
-    } finally {
-      tableMeta?.setLoadToaster(false);
-      toast({
-        description: 'Deleted device(s)',
-        duration: 2000,
-      });
     }
 
     table.options.meta?.removeSelectedRows(
@@ -61,7 +64,60 @@ export default function TableToolbar({ table }: TableToolBarProps) {
   };
 
   const handleAddDevice = function () {
-    table.options.meta?.addRow();
+    const projectName = tableMeta?.project.name;
+    const projectId = tableMeta?.project.id;
+
+    const newDevice = {
+      name: '',
+      location: '',
+      ipAddress: '',
+      subnet: '',
+      gateway: '',
+      status: 'Not Assigned',
+      system: '',
+      projectId,
+    };
+    const newRow = async function (): Promise<Device> {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/projects/${projectName}`,
+          {
+            method: 'POST',
+            body: JSON.stringify(newDevice),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        if (!response.ok) {
+          const errorResponse = await response.json();
+          const error = errorResponse.message;
+          toast({
+            title: 'Error',
+            description: `${error}`,
+            duration: 3000,
+            variant: 'destructive',
+          });
+        }
+        const data = await response.json();
+        table.options.meta?.addRow(data);
+        toast({
+          title: 'New device added.',
+          description: 'You can edit device details now.',
+          duration: 3000,
+        });
+        return data;
+      } catch (error: any) {
+        toast({
+          title: 'Something went wrong...',
+          description: `${error.message}`,
+          duration: 3000,
+          variant: 'destructive',
+        });
+        throw new Error('There was an error creating project');
+      }
+    };
+    newRow();
   };
 
   const systems = table.getColumn('system')?.getFacetedUniqueValues();
