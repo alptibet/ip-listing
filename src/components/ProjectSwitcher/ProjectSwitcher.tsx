@@ -35,11 +35,6 @@ import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 
-type Project = {
-  id: string;
-  name: string;
-};
-
 type NewProject = {
   name: string;
 };

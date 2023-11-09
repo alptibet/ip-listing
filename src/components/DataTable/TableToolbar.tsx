@@ -22,6 +22,16 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       .rows.map((item) => item.original)
       .map((item) => item.id);
 
+    if (itemsToDelete.length === 0) {
+      toast({
+        title: 'Select at least one device to remove',
+        description: 'No devices selected',
+        duration: 3000,
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:3000/api/projects/${projectName}`,
@@ -135,6 +145,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2 my-2">
         <Input
+          id="filter-device"
           placeholder="Filter devices..."
           value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
@@ -143,6 +154,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
           className="max-w-sm"
         />
         <Input
+          id="filter-ip"
           placeholder="Filter IPs..."
           value={
             (table.getColumn('ipAddress')?.getFilterValue() as string) ?? ''

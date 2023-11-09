@@ -22,7 +22,9 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const projects = await prisma.project.findMany({ select: { name: true } });
+    const projects = await prisma.project.findMany({
+      select: { id: true, name: true },
+    });
     return NextResponse.json(projects, { status: 200 });
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
     return NextResponse.json(
