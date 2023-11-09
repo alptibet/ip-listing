@@ -118,36 +118,25 @@ export default function ProjectSwitcher() {
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup heading="Projects">
                 {projects.map((project) => {
-                  if (!isLoading) {
-                    return (
-                      <CommandItem
-                        key={project.id}
-                        className="text-sm flex items-center justify-between"
-                        onSelect={() => {
-                          setShowPopover(false);
-                          handleRoute(
-                            `/dashboard/${project.name.toLowerCase()}`
-                          );
-                        }}
-                      >
-                        {project.name}
-                        <CheckIcon
-                          className={cn(
-                            projectName === project.name
-                              ? 'opacity-100'
-                              : 'opacity-0'
-                          )}
-                        />
-                      </CommandItem>
-                    );
-                  } else {
-                    return (
-                      <Skeleton
-                        key={project.id}
-                        className="w-[100px] h-[20px] rounded-full"
+                  return (
+                    <CommandItem
+                      key={project.id}
+                      className="text-sm flex items-center justify-between"
+                      onSelect={() => {
+                        setShowPopover(false);
+                        handleRoute(`/dashboard/${project.name.toLowerCase()}`);
+                      }}
+                    >
+                      {project.name}
+                      <CheckIcon
+                        className={cn(
+                          projectName === project.name
+                            ? 'opacity-100'
+                            : 'opacity-0'
+                        )}
                       />
-                    );
-                  }
+                    </CommandItem>
+                  );
                 })}
               </CommandGroup>
             </CommandList>
