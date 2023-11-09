@@ -35,3 +35,23 @@ export async function GET() {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const body = await req.json();
+  console.log(body);
+  try {
+    const deleteDevice = await prisma.project.delete({
+      where: {
+        name: body,
+      },
+    });
+    return NextResponse.json(deleteDevice, { status: 201 });
+  } catch (error: Prisma.PrismaClientKnownRequestError | any) {
+    return NextResponse.json(
+      {
+        message: error.message,
+      },
+      { status: 400 }
+    );
+  }
+}

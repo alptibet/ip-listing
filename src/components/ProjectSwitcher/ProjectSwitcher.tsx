@@ -34,6 +34,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
+import DeleteProjectAlert from '../DeteleProjectAlert/DeleteProjectAlert';
 
 type NewProject = {
   name: string;
@@ -91,6 +92,8 @@ export default function ProjectSwitcher() {
       throw new Error('There was an error creating project');
     } finally {
       setIsEditedProjects(false);
+      setShowNewProjectDialog(false);
+      router.push(`/dashboard/${newProject.name}`);
     }
   }
 
@@ -153,15 +156,20 @@ export default function ProjectSwitcher() {
             <CommandList>
               <CommandGroup>
                 <DialogTrigger asChild>
-                  <CommandItem
-                    onSelect={() => {
-                      setShowPopover(false);
-                      setShowNewProjectDialog(true);
-                    }}
-                  >
-                    <PlusCircledIcon className="mr-2" />
-                    Add Project
-                  </CommandItem>
+                  <>
+                    <CommandItem
+                      onSelect={() => {
+                        setShowPopover(false);
+                        setShowNewProjectDialog(true);
+                      }}
+                    >
+                      <PlusCircledIcon className="mr-2" />
+                      Add Project
+                    </CommandItem>
+                    <CommandItem>
+                      <DeleteProjectAlert projectName={projectName} />
+                    </CommandItem>
+                  </>
                 </DialogTrigger>
               </CommandGroup>
             </CommandList>

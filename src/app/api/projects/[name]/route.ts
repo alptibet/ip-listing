@@ -62,12 +62,12 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const body = await req.json();
   try {
-    const updateDevice = await prisma.device.deleteMany({
+    const deleteDevice = await prisma.device.deleteMany({
       where: {
         id: { in: body },
       },
     });
-    return NextResponse.json({ updateDevice }, { status: 201 });
+    return NextResponse.json({ updateDevice: deleteDevice }, { status: 201 });
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
     return NextResponse.json(
       {

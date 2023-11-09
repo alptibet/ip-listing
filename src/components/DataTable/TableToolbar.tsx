@@ -4,7 +4,6 @@ import FacetedFilter from './FacetedFilter';
 import ViewOptions from './ViewOptions';
 import { Button } from '../ui/button';
 import { Device } from './Columns';
-import { useState } from 'react';
 import { toast } from '../ui/use-toast';
 
 type TableToolBarProps = {
@@ -185,11 +184,13 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         )}
         <ViewOptions table={table} />
       </div>
-      <div className="flex gap-2 mb-4">
-        <Button onClick={handleAddDevice}>Add Device</Button>
-        <Button variant="destructive" onClick={handleRemove}>
-          Remove Selected
-        </Button>
+      <div className="flex mb-4">
+        <div className="flex gap-2">
+          <Button onClick={handleAddDevice}>Add Device</Button>
+          <Button variant="destructive" onClick={handleRemove}>
+            Remove Selected
+          </Button>
+        </div>
       </div>
     </div>
   );
