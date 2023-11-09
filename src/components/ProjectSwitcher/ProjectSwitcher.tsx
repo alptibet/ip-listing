@@ -33,7 +33,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import { Skeleton } from '../ui/skeleton';
 import DeleteProjectAlert from '../DeteleProjectAlert/DeleteProjectAlert';
 import { toast } from '../ui/use-toast';
 
