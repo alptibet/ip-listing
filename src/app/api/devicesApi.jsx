@@ -27,3 +27,19 @@ export const addDevice = async (params) => {
 
   return response.data;
 };
+
+export const deleteDevice = async (params) => {
+  console.log(params);
+  const projectName = params[1];
+  const devices = params[0];
+  const response = await devicesApi.delete(
+    `${devicesUrlEndpoint}/${projectName}`,
+    {
+      data: devices,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return response.data;
+};

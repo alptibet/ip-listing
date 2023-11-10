@@ -10,6 +10,7 @@ import useSWR from 'swr';
 import {
   getDevices,
   addDevice,
+  deleteDevice,
   devicesUrlEndpoint as cacheKey,
 } from '../../app/api/devicesApi';
 // import { addDeviceOptions } from '../../app/api/devicesSWROptions';
@@ -24,14 +25,9 @@ export default function TableToolbar({ table }: TableToolBarProps) {
   const projectName = tableMeta?.project.name;
   const projectId = tableMeta?.project.id;
 
-  const {
-    isLoading,
-    error,
-    data: projects,
-    mutate,
-  } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
+  const { mutate } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
 
-  const handleRemove = async function () {
+  const handleDeleteDevice = async function () {
     const projectName = tableMeta?.project.name;
     const itemsToDelete = table
       .getSelectedRowModel()
@@ -47,28 +43,15 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       });
       return;
     }
-
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/projects/${projectName}`,
-        {
-          method: 'DELETE',
-          body: JSON.stringify(itemsToDelete),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+      await mutate(
+        deleteDevice([itemsToDelete, projectName]).then(() => {
+          tableMeta?.removeSelectedRows(
+            table.getSelectedRowModel().rows.map((row) => row.index)
+          );
+          table.resetRowSelection();
+        })
       );
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        const error = errorResponse.message;
-        toast({
-          title: 'Error',
-          description: `${error}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-      }
       toast({
         description: 'Device(s) deleted.',
         duration: 3000,
@@ -80,17 +63,10 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         duration: 3000,
         variant: 'destructive',
       });
-      throw new Error('There was an error deleting project');
     }
-
-    table.options.meta?.removeSelectedRows(
-      table.getSelectedRowModel().rows.map((row) => row.index)
-    );
-    table.resetRowSelection();
   };
 
   const handleNewDevice = async function () {
-    console.log('attempting to add');
     const newDevice = {
       name: '',
       location: '',
@@ -106,7 +82,6 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         addDevice([newDevice, projectName]).then((data) =>
           tableMeta?.addRow(data)
         )
-        // addDeviceOptions(newDevice)
       );
       toast({
         title: 'New device added.',
@@ -181,7 +156,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       <div className="flex mb-4">
         <div className="flex gap-2">
           <Button onClick={handleNewDevice}>Add Device</Button>
-          <Button variant="destructive" onClick={handleRemove}>
+          <Button variant="destructive" onClick={handleDeleteDevice}>
             Remove Selected
           </Button>
         </div>

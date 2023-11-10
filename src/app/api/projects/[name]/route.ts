@@ -61,6 +61,7 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const body = await req.json();
+  console.log(body);
   try {
     const deleteDevice = await prisma.device.deleteMany({
       where: {
