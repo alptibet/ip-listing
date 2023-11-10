@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const projectsApi = axios.create({
-  baseURL: window.location.protocol + ', //' + window.location.hostname,
+  baseURL: window.location.protocol + '//' + window.location.hostname,
 });
 
 export const projectsUrlEndpoint = '/api/projects';
