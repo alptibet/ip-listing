@@ -44,14 +44,11 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       return;
     }
     try {
-      await mutate(
-        deleteDevice([itemsToDelete, projectName]).then(() => {
-          tableMeta?.removeSelectedRows(
-            table.getSelectedRowModel().rows.map((row) => row.index)
-          );
-          table.resetRowSelection();
-        })
+      await mutate(deleteDevice([itemsToDelete, projectName]));
+      tableMeta?.removeSelectedRows(
+        table.getSelectedRowModel().rows.map((row) => row.index)
       );
+      table.resetRowSelection();
       toast({
         description: 'Device(s) deleted.',
         duration: 3000,
@@ -77,12 +74,10 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       system: '',
       projectId,
     };
+    let data;
     try {
-      await mutate(
-        addDevice([newDevice, projectName]).then((data) =>
-          tableMeta?.addRow(data)
-        )
-      );
+      await mutate((data = await addDevice([newDevice, projectName])));
+      tableMeta?.addRow(data);
       toast({
         title: 'New device added.',
         description: 'You can edit device details now.',

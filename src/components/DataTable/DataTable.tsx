@@ -90,7 +90,6 @@ export function DataTable({ deviceData }: any) {
         }
       },
       addRow: (newRow) => {
-        console.log(newRow);
         setData((old) => [...old, newRow]);
         setOriginalData((old) => [...old, newRow]);
       },
