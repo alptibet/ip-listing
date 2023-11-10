@@ -9,13 +9,13 @@ export const addProjectOptions = (newProject) => {
   };
 };
 
-export const deleteProjectOptions = (id) => {
+export const deleteProjectOptions = (name) => {
   return {
     // optimistic data displays until we populate cache
     // param is previous data
     optimisticData: (projects) => {
       return projects.filter((project) => {
-        return project.id !== id;
+        return project.name !== name;
       });
     },
     rollbackOnError: true,
@@ -23,7 +23,7 @@ export const deleteProjectOptions = (id) => {
     // previous data is 2nd param
     populateCache: (emptyResponseObj, projects) => {
       return projects.filter((project) => {
-        return project.id !== id;
+        return project.name !== name;
       });
     },
     revalidate: false,

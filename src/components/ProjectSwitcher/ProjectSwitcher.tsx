@@ -64,7 +64,7 @@ export default function ProjectSwitcher() {
     mutate,
   } = useSWR(cacheKey, getProjects);
 
-  async function handleNewProject() {
+  const handleNewProject = async function () {
     try {
       await mutate(addProject(newProject), addProjectOptions(newProject));
     } catch (err) {
@@ -72,7 +72,7 @@ export default function ProjectSwitcher() {
     } finally {
       setShowNewProjectDialog(false);
     }
-  }
+  };
 
   const handleDelete = function () {
     setIsEditedProjects(true);

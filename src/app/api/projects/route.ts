@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const body = await req.json();
+  console.log(body);
   try {
     const deleteDevice = await prisma.project.delete({
       where: {

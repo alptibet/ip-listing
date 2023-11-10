@@ -12,6 +12,12 @@ import {
 import { toast } from '../ui/use-toast';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
+import {
+  deleteProject,
+  projectsUrlEndpoint as cacheKey,
+} from '../../app/api/projectApi';
+import { deleteProjectOptions } from '../../app/api/projectSWROptions';
 
 type propTypes = {
   projectName: string;
@@ -23,43 +29,24 @@ export default function DeleteProjectAlert({
   handleDelete,
 }: propTypes) {
   const router = useRouter();
+
+  const { error, mutate } = useSWR(cacheKey, deleteProject);
   const handleDeleteProject = async function (projectName: string) {
+    console.log(projectName);
     try {
-      const response = await fetch(`http://localhost:3000/api/projects/`, {
-        method: 'DELETE',
-        body: JSON.stringify(projectName),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        const error = errorResponse.message;
-        toast({
-          title: 'Error',
-          description: `${error}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-      }
-      toast({
-        description: 'Project deleted.',
-        duration: 3000,
-      });
-      router.push('/dashboard');
-    } catch (error: any) {
-      toast({
-        title: 'Something went wrong...',
-        description: `${error.message}`,
-        duration: 3000,
-        variant: 'destructive',
-      });
-      throw new Error('There was an error deleting project');
+      await mutate(
+        deleteProject(projectName),
+        deleteProjectOptions(projectName)
+      );
+      router.push('/dashoard');
+    } catch (err) {
+      //toast here
+      console.log(err);
     } finally {
       handleDelete();
     }
   };
-
+  console.log(error);
   return (
     <div>
       <AlertDialog>
