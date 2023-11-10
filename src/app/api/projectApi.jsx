@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const projectsApi = axios.create({
-  baseURL: 'https://ip-listing.vercel.app/',
+  baseURL: window.location.protocol + ', //' + window.location.hostname,
 });
 
 export const projectsUrlEndpoint = '/api/projects';

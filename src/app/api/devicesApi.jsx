@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const devicesApi = axios.create({
-  baseURL: 'https://ip-listing.vercel.app/',
+  baseURL: window.location.protocol + ', //' + window.location.hostname,
 });
 
 export const devicesUrlEndpoint = '/api/projects';
