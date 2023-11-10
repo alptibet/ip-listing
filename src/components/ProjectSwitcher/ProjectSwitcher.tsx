@@ -34,7 +34,14 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import DeleteProjectAlert from '../DeteleProjectAlert/DeleteProjectAlert';
-import { toast } from '../ui/use-toast';
+// import { toast } from '../ui/use-toast';
+import useSWR from 'swr';
+import {
+  getProjects,
+  addProject,
+  projectsUrlEndpoint as cacheKey,
+} from '../../app/api/projectApi';
+import { addProjectOptions } from '../../app/api/projectSWROptions';
 
 type NewProject = {
   name: string;
@@ -43,8 +50,8 @@ type NewProject = {
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [projects, setProjects] = useState([{ id: '', name: '' }]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [projects, setProjects] = useState([{ id: '', name: '' }]);
   const [newProject, setNewProject] = useState<NewProject>({ name: '' });
   const [isEditedProjects, setIsEditedProjects] = useState(true);
 
@@ -56,73 +63,14 @@ export default function ProjectSwitcher() {
     router.push(path);
   }
 
-  useEffect(() => {
-    async function fetchProjects() {
-      if (isEditedProjects) {
-        setIsLoading(true);
-        try {
-          const response = await fetch('http://localhost:3000/api/projects');
-          const projects = await response.json();
-          setProjects(projects);
-          if (!response.ok) {
-            const errorResponse = await response.json();
-            const error = errorResponse.message;
-            toast({
-              title: 'Error',
-              description: `${error}`,
-              duration: 3000,
-              variant: 'destructive',
-            });
-          }
-        } catch (error) {
-          throw new Error('There was an error fetching projects');
-        } finally {
-          setIsEditedProjects(false);
-          setIsLoading(false);
-        }
-      } else {
-        return;
-      }
-    }
-    fetchProjects();
-  }, [isEditedProjects]);
+  const { isLoading, error, data, mutate } = useSWR(cacheKey, getProjects);
 
-  async function addProject() {
+  async function handleNewProject() {
     try {
-      const response = await fetch('http://localhost:3000/api/projects', {
-        method: 'POST',
-        body: JSON.stringify(newProject),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        const error = errorResponse.message;
-        toast({
-          title: 'Error',
-          description: `${error}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-      }
-      toast({
-        description: 'Created project.',
-        duration: 3000,
-      });
-      setIsEditedProjects(true);
-    } catch (error: any) {
-      toast({
-        title: 'Something went wrong...',
-        description: `${error.message}`,
-        duration: 3000,
-        variant: 'destructive',
-      });
-      throw new Error('There was an error creating project');
-    } finally {
-      // setIsEditedProjects(false);
-      setShowNewProjectDialog(false);
-      router.push(`/dashboard/${newProject.name}`);
+      console.log(newProject);
+      await mutate(addProject(newProject), addProjectOptions(newProject));
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -151,27 +99,33 @@ export default function ProjectSwitcher() {
               <CommandInput placeholder="Search project..." />
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup heading="Projects">
-                {projects.map((project) => {
-                  return (
-                    <CommandItem
-                      key={project.id}
-                      className="text-sm flex items-center justify-between"
-                      onSelect={() => {
-                        setShowPopover(false);
-                        handleRoute(`/dashboard/${project.name.toLowerCase()}`);
-                      }}
-                    >
-                      {project.name}
-                      <CheckIcon
-                        className={cn(
-                          projectName === project.name
-                            ? 'opacity-100'
-                            : 'opacity-0'
-                        )}
-                      />
-                    </CommandItem>
-                  );
-                })}
+                {isLoading && <p>Loading Projects</p>}
+                {error && <p>Error loading projects</p>}
+                {!isLoading &&
+                  !error &&
+                  data.map((project) => {
+                    return (
+                      <CommandItem
+                        key={project.id}
+                        className="text-sm flex items-center justify-between"
+                        onSelect={() => {
+                          setShowPopover(false);
+                          handleRoute(
+                            `/dashboard/${project.name.toLowerCase()}`
+                          );
+                        }}
+                      >
+                        {project.name}
+                        <CheckIcon
+                          className={cn(
+                            projectName === project.name
+                              ? 'opacity-100'
+                              : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    );
+                  })}
               </CommandGroup>
             </CommandList>
             <CommandSeparator />
@@ -222,7 +176,7 @@ export default function ProjectSwitcher() {
         </div>
         <DialogFooter className="mr-auto flex items-center justify-between">
           <div className="flex gap-2">
-            <Button onClick={addProject}>Submit</Button>
+            <Button onClick={handleNewProject}>Submit</Button>
             <Button
               variant="destructive"
               onClick={() => setShowNewProjectDialog(false)}

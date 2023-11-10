@@ -20,12 +20,12 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-
+  console.log(body);
   try {
     const newProject = await prisma.project.create({
       data: { name: body.name },
     });
-    return NextResponse.json({ newProject }, { status: 201 });
+    return NextResponse.json(newProject, { status: 201 });
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
     return NextResponse.json(
       {
