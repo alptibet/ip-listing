@@ -32,7 +32,7 @@ import { Device, columns } from './Columns';
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     editRow: (rowIndex: number, columnId: string, value: string) => void;
-    addRow: () => void;
+    addRow: (newRow: Device) => void;
     removeRow: (rowIndex: number) => void;
     removeSelectedRows: (selectedRow: number[]) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
@@ -47,7 +47,7 @@ export function DataTable({ deviceData }: any) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState(() => [...deviceData.devices]);
+  const [data, setData] = useState(() => [...deviceData]);
   const [originalData, setOriginalData] = useState(() => [
     ...deviceData.devices,
   ]);
@@ -89,17 +89,7 @@ export function DataTable({ deviceData }: any) {
           );
         }
       },
-      addRow: () => {
-        const newRow: Device = {
-          id: '',
-          name: '',
-          location: '',
-          ipAddress: '',
-          subnet: '',
-          gateway: '',
-          status: 'Not Assigned',
-          system: '',
-        };
+      addRow: (newRow) => {
         setData((old) => [...old, newRow]);
         setOriginalData((old) => [...old, newRow]);
       },

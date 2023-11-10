@@ -10,7 +10,6 @@ import {
   getDevices,
   devicesUrlEndpoint as cacheKey,
 } from '../../api/projectApi';
-// import { addDeviceOptions } from '../../api/projectSWROptions';
 
 export default function DashboardPage({
   params: { name },
@@ -21,8 +20,8 @@ export default function DashboardPage({
     isLoading,
     error,
     data: devices,
-    mutate,
-  } = useSWR(cacheKey, getDevices);
+  } = useSWR(cacheKey, getDevices(name));
+  console.log(devices);
 
   if (isLoading) {
     return (

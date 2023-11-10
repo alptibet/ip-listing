@@ -6,6 +6,14 @@ import { Button } from '../ui/button';
 import { Device } from './Columns';
 import { toast } from '../ui/use-toast';
 
+import useSWR from 'swr';
+import {
+  getDevices,
+  addDevice,
+  devicesUrlEndpoint as cacheKey,
+} from '../../app/api/projectApi';
+import { addDeviceOptions } from '../../app/api/projectSWROptions';
+
 type TableToolBarProps = {
   table: Table<Device>;
 };
@@ -13,6 +21,15 @@ type TableToolBarProps = {
 export default function TableToolbar({ table }: TableToolBarProps) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const tableMeta = table.options.meta;
+  const projectName = tableMeta?.project.name;
+  const projectId = tableMeta?.project.id;
+
+  const {
+    isLoading,
+    error,
+    data: projects,
+    mutate,
+  } = useSWR(cacheKey, getDevices);
 
   const handleRemove = async function () {
     const projectName = tableMeta?.project.name;
@@ -72,10 +89,29 @@ export default function TableToolbar({ table }: TableToolBarProps) {
     table.resetRowSelection();
   };
 
-  const handleAddDevice = function () {
-    const projectName = tableMeta?.project.name;
-    const projectId = tableMeta?.project.id;
+  const handleNewDevice = function () {
+    const newDevice = {
+      name: '',
+      location: '',
+      ipAddress: '',
+      subnet: '',
+      gateway: '',
+      status: 'Not Assigned',
+      system: '',
+      projectId,
+    };
+    const newRow = async function () {
+      try {
+        await mutate(addDevice(newDevice), addDeviceOptions(newDevice));
+      } catch (err) {
+        //toast here
+        console.log(err);
+      }
+    };
+    newRow();
+  };
 
+  const handleAddDevice = function () {
     const newDevice = {
       name: '',
       location: '',
@@ -186,7 +222,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       </div>
       <div className="flex mb-4">
         <div className="flex gap-2">
-          <Button onClick={handleAddDevice}>Add Device</Button>
+          <Button onClick={handleNewDevice}>Add Device</Button>
           <Button variant="destructive" onClick={handleRemove}>
             Remove Selected
           </Button>

@@ -36,7 +36,17 @@ export const deleteProject = async (name) => {
   return response.data;
 };
 
-export const getDevices = async () => {
-  const response = await devicesApi.get(devicesUrlEndpoint);
+export const getDevices = async ({ projectName }) => {
+  const response = await devicesApi.get(`devicesUrlEndpoint/${projectName}`);
+  return response.data;
+};
+
+export const addDevice = async (device) => {
+  const response = await devicesApi.post(devicesUrlEndpoint, {
+    data: device,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   return response.data;
 };
