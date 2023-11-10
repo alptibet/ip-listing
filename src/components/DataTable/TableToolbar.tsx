@@ -10,7 +10,7 @@ import useSWR from 'swr';
 import {
   getDevices,
   addDevice,
-  devicesUrlEndpoint as cacheKey,
+  projectsUrlEndpoint as cacheKey,
 } from '../../app/api/projectApi';
 import { addDeviceOptions } from '../../app/api/projectSWROptions';
 

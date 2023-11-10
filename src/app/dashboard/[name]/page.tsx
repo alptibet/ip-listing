@@ -8,7 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 import {
   getDevices,
-  devicesUrlEndpoint as cacheKey,
+  projectsUrlEndpoint as cacheKey,
 } from '../../api/projectApi';
 
 export default function DashboardPage({
@@ -20,8 +20,7 @@ export default function DashboardPage({
     isLoading,
     error,
     data: devices,
-  } = useSWR(cacheKey, getDevices(name));
-  console.log(devices);
+  } = useSWR(`${cacheKey}/${name.toUpperCase()}`, getDevices);
 
   if (isLoading) {
     return (
@@ -30,9 +29,7 @@ export default function DashboardPage({
         <h2 className="inline ml-2">LOADING {name.toUpperCase()}...</h2>
       </div>
     );
-  }
-
-  if (error || !devices) {
+  } else if (error || !devices) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Alert variant="destructive" className="ml-2 w-max">
@@ -50,11 +47,11 @@ export default function DashboardPage({
         </Alert>
       </div>
     );
+  } else {
+    return (
+      <div className="mx-2 my-2">
+        <DataTable deviceData={devices} />
+      </div>
+    );
   }
-
-  return (
-    <div className="mx-2 my-2">
-      <DataTable deviceData={devices} />
-    </div>
-  );
 }

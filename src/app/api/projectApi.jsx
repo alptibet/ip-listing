@@ -4,12 +4,7 @@ const projectsApi = axios.create({
   baseURL: 'http://localhost:3000/api',
 });
 
-const devicesApi = axios.create({
-  baseURL: 'http://localhost:3000/api/projects',
-});
-
 export const projectsUrlEndpoint = '/projects';
-export const devicesUrlEndpoint = '/';
 
 export const getProjects = async () => {
   const response = await projectsApi.get(projectsUrlEndpoint);
@@ -36,13 +31,13 @@ export const deleteProject = async (name) => {
   return response.data;
 };
 
-export const getDevices = async ({ projectName }) => {
-  const response = await devicesApi.get(`devicesUrlEndpoint/${projectName}`);
-  return response.data;
+export const getDevices = async () => {
+  //   const response = await projectsApi.get(projectsUrlEndpoint);
+  //   return response.data;
 };
 
 export const addDevice = async (device) => {
-  const response = await devicesApi.post(devicesUrlEndpoint, {
+  const response = await projectsApi.post(projectsUrlEndpoint, {
     data: device,
     headers: {
       'Content-Type': 'application/json',
