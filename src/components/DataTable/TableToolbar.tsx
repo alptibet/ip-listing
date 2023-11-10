@@ -103,11 +103,23 @@ export default function TableToolbar({ table }: TableToolBarProps) {
     };
     try {
       await mutate(
-        addDevice([newDevice, projectName]),
+        addDevice([newDevice, projectName]).then((data) =>
+          tableMeta?.addRow(data)
+        ),
         addDeviceOptions(newDevice)
       );
-    } catch (err) {
-      //toast here
+      toast({
+        title: 'New device added.',
+        description: 'You can edit device details now.',
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
     }
   };
 

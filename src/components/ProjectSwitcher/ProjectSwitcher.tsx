@@ -70,7 +70,7 @@ export default function ProjectSwitcher() {
   const handleNewProject = async function () {
     try {
       await mutate(addProject(newProject), addProjectOptions(newProject));
-    } catch (err) {
+    } catch (error) {
       //toast here
     } finally {
       setShowNewProjectDialog(false);
@@ -84,7 +84,7 @@ export default function ProjectSwitcher() {
         deleteProject(projectName),
         deleteProjectOptions(projectName)
       );
-    } catch (err) {
+    } catch (error) {
       //toast here
     } finally {
       setShowPopover(false);
