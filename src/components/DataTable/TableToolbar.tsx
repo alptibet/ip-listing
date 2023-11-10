@@ -10,9 +10,9 @@ import useSWR from 'swr';
 import {
   getDevices,
   addDevice,
-  projectsUrlEndpoint as cacheKey,
-} from '../../app/api/projectApi';
-import { addDeviceOptions } from '../../app/api/projectSWROptions';
+  devicesUrlEndpoint as cacheKey,
+} from '../../app/api/devicesApi';
+import { addDeviceOptions } from '../../app/api/devicesSWROptions';
 
 type TableToolBarProps = {
   table: Table<Device>;
@@ -90,6 +90,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
   };
 
   const handleNewDevice = function () {
+    console.log('attempting to add');
     const newDevice = {
       name: '',
       location: '',

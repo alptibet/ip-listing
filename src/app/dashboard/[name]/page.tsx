@@ -8,8 +8,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 import {
   getDevices,
-  projectsUrlEndpoint as cacheKey,
-} from '../../api/projectApi';
+  devicesUrlEndpoint as cacheKey,
+} from '../../api/devicesApi';
 
 export default function DashboardPage({
   params: { name },

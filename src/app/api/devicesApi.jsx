@@ -12,7 +12,8 @@ export const getDevices = async (params) => {
   return response.data;
 };
 
-export const addDevice = async (device) => {
+export const addDevice = async (device, projName) => {
+  console.log(device);
   const response = await devicesApi.post(devicesUrlEndpoint, {
     data: device,
     headers: {
