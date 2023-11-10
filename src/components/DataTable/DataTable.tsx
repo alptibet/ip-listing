@@ -43,7 +43,6 @@ declare module '@tanstack/react-table' {
 }
 
 export function DataTable({ deviceData }: any) {
-  // console.log(deviceData);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
