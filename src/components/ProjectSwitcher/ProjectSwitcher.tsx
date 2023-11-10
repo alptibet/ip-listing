@@ -43,7 +43,6 @@ type NewProject = {
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [projects, setProjects] = useState([{ id: '', name: '' }]);
   const [newProject, setNewProject] = useState<NewProject>({ name: '' });
   const [isEditedProjects, setIsEditedProjects] = useState(true);
@@ -59,7 +58,6 @@ export default function ProjectSwitcher() {
   useEffect(() => {
     async function fetchProjects() {
       if (isEditedProjects) {
-        setIsLoading(true);
         try {
           const response = await fetch('http://localhost:3000/api/projects');
           const projects = await response.json();
@@ -78,7 +76,6 @@ export default function ProjectSwitcher() {
           throw new Error('There was an error fetching projects');
         } finally {
           setIsEditedProjects(false);
-          setIsLoading(false);
         }
       } else {
         return;
@@ -120,7 +117,6 @@ export default function ProjectSwitcher() {
       });
       throw new Error('There was an error creating project');
     } finally {
-      // setIsEditedProjects(false);
       setShowNewProjectDialog(false);
       router.push(`/dashboard/${newProject.name}`);
     }
