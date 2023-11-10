@@ -85,8 +85,6 @@ export default function ProjectSwitcher() {
       );
     } catch (err) {
       //toast here
-    } finally {
-      setShowNewProjectDialog(false);
     }
   };
 
