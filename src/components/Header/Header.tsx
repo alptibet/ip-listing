@@ -17,7 +17,7 @@ export default async function Header() {
   return (
     <div className="flex items-center justify-between mx-2 my-2">
       <div className="flex items-center gap-5">
-        <ButtonLink label="HOME" url="/" />
+        <h2>Projects</h2>
         {user && <ProjectSwitcher />}
       </div>
 
