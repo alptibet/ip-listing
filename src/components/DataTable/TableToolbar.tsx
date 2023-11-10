@@ -29,7 +29,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
     error,
     data: projects,
     mutate,
-  } = useSWR(cacheKey, getDevices);
+  } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
 
   const handleRemove = async function () {
     const projectName = tableMeta?.project.name;
@@ -89,7 +89,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
     table.resetRowSelection();
   };
 
-  const handleNewDevice = function () {
+  const handleNewDevice = async function () {
     console.log('attempting to add');
     const newDevice = {
       name: '',
@@ -101,14 +101,14 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       system: '',
       projectId,
     };
-    const newRow = async function () {
-      try {
-        await mutate(addDevice(newDevice), addDeviceOptions(newDevice));
-      } catch (err) {
-        //toast here
-      }
-    };
-    newRow();
+    try {
+      await mutate(
+        addDevice([newDevice, projectName]),
+        addDeviceOptions(newDevice)
+      );
+    } catch (err) {
+      //toast here
+    }
   };
 
   const handleAddDevice = function () {

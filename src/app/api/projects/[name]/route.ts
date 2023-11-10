@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   try {
     const newDevice = await prisma.device.create({
-      data: body,
+      data: body.device,
     });
     return NextResponse.json(newDevice, { status: 201 });
   } catch (error: Prisma.PrismaClientKnownRequestError | any) {

@@ -12,13 +12,18 @@ export const getDevices = async (params) => {
   return response.data;
 };
 
-export const addDevice = async (device, projName) => {
-  console.log(device);
-  const response = await devicesApi.post(devicesUrlEndpoint, {
-    data: device,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+export const addDevice = async (params) => {
+  const projectName = params[1];
+  const device = params[0];
+  const response = await devicesApi.post(
+    `${devicesUrlEndpoint}/${projectName}`,
+    {
+      device,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
   return response.data;
 };
