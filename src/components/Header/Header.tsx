@@ -1,4 +1,3 @@
-import { ButtonLink } from '../Buttons/Buttons';
 import ProjectSwitcher from '../ProjectSwitcher/ProjectSwitcher';
 import ThemeToggleButton from '../ThemeToggleButton/ThemeToggleButton';
 import { currentUser } from '@clerk/nextjs/server';
