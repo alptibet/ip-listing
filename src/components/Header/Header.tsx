@@ -16,8 +16,12 @@ export default async function Header() {
   return (
     <div className="flex items-center justify-between mx-2 my-2">
       <div className="flex items-center gap-5">
-        <h2>Projects</h2>
-        {user && <ProjectSwitcher />}
+        {user && (
+          <>
+            <h2>Projects</h2>
+            <ProjectSwitcher />
+          </>
+        )}
       </div>
 
       <div className="flex items-center gap-5">
