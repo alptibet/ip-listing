@@ -12,7 +12,7 @@ import {
   addDevice,
   devicesUrlEndpoint as cacheKey,
 } from '../../app/api/devicesApi';
-import { addDeviceOptions } from '../../app/api/devicesSWROptions';
+// import { addDeviceOptions } from '../../app/api/devicesSWROptions';
 
 type TableToolBarProps = {
   table: Table<Device>;
@@ -105,8 +105,8 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       await mutate(
         addDevice([newDevice, projectName]).then((data) =>
           tableMeta?.addRow(data)
-        ),
-        addDeviceOptions(newDevice)
+        )
+        // addDeviceOptions(newDevice)
       );
       toast({
         title: 'New device added.',
@@ -121,60 +121,6 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         variant: 'destructive',
       });
     }
-  };
-
-  const handleAddDevice = function () {
-    const newDevice = {
-      name: '',
-      location: '',
-      ipAddress: '',
-      subnet: '',
-      gateway: '',
-      status: 'Not Assigned',
-      system: '',
-      projectId,
-    };
-    const newRow = async function (): Promise<Device> {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/projects/${projectName}`,
-          {
-            method: 'POST',
-            body: JSON.stringify(newDevice),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!response.ok) {
-          const errorResponse = await response.json();
-          const error = errorResponse.message;
-          toast({
-            title: 'Error',
-            description: `${error}`,
-            duration: 3000,
-            variant: 'destructive',
-          });
-        }
-        const data = await response.json();
-        table.options.meta?.addRow(data);
-        toast({
-          title: 'New device added.',
-          description: 'You can edit device details now.',
-          duration: 3000,
-        });
-        return data;
-      } catch (error: any) {
-        toast({
-          title: 'Something went wrong...',
-          description: `${error.message}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-        throw new Error('There was an error creating project');
-      }
-    };
-    newRow();
   };
 
   const systems = table.getColumn('system')?.getFacetedUniqueValues();
