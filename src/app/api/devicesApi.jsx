@@ -1,8 +1,12 @@
 import axios from 'axios';
 
 const devicesApi = axios.create({
-  baseURL: window.location.protocol + '//' + window.location.hostname,
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
 });
+console.log(window.location.protocol + '//' + window.location.hostname);
 
 export const devicesUrlEndpoint = '/api/projects';
 

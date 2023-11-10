@@ -1,7 +1,10 @@
 import axios from 'axios';
 
 const projectsApi = axios.create({
-  baseURL: window.location.protocol + '//' + window.location.hostname,
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
 });
 
 export const projectsUrlEndpoint = '/api/projects';
