@@ -30,21 +30,3 @@ export const deleteProject = async (name) => {
   });
   return response.data;
 };
-
-export const getDevices = async (params) => {
-  const projectName = params[1];
-  const response = await projectsApi.get(
-    `${projectsUrlEndpoint}/${projectName}`
-  );
-  return response.data;
-};
-
-export const addDevice = async (device) => {
-  const response = await projectsApi.post(projectsUrlEndpoint, {
-    data: device,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return response.data;
-};

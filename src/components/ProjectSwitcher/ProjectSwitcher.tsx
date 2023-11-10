@@ -116,7 +116,6 @@ export default function ProjectSwitcher() {
                 {error && <p>Error loading projects</p>}
                 {!isLoading &&
                   !error &&
-                  projects &&
                   projects.map((project: { id: string; name: string }) => {
                     return (
                       <CommandItem
