@@ -46,6 +46,7 @@ import {
   addProjectOptions,
   deleteProjectOptions,
 } from '../../app/api/projectSWROptions';
+import { toast } from '../ui/use-toast';
 
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
@@ -70,11 +71,20 @@ export default function ProjectSwitcher() {
   const handleNewProject = async function () {
     try {
       await mutate(addProject(newProject), addProjectOptions(newProject));
-    } catch (error) {
-      //toast here
+      toast({
+        description: 'Project created.',
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
     } finally {
       setShowNewProjectDialog(false);
-      setShowPopover(false);
+      router.push(`/dashboard/${newProject}`);
     }
   };
 
@@ -84,8 +94,18 @@ export default function ProjectSwitcher() {
         deleteProject(projectName),
         deleteProjectOptions(projectName)
       );
-    } catch (error) {
-      //toast here
+      toast({
+        description: 'Project deleted.',
+        duration: 3000,
+      });
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
     } finally {
       setShowPopover(false);
     }
