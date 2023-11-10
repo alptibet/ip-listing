@@ -39,15 +39,18 @@ import useSWR from 'swr';
 import {
   getProjects,
   addProject,
+  deleteProject,
   projectsUrlEndpoint as cacheKey,
 } from '../../app/api/projectApi';
-import { addProjectOptions } from '../../app/api/projectSWROptions';
+import {
+  addProjectOptions,
+  deleteProjectOptions,
+} from '../../app/api/projectSWROptions';
 
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
   const [newProject, setNewProject] = useState('');
-  const [isEditedProjects, setIsEditedProjects] = useState(true);
 
   const router = useRouter();
   const params = useParams();
@@ -67,6 +70,19 @@ export default function ProjectSwitcher() {
   const handleNewProject = async function () {
     try {
       await mutate(addProject(newProject), addProjectOptions(newProject));
+    } catch (err) {
+      //toast here
+    } finally {
+      setShowNewProjectDialog(false);
+    }
+  };
+
+  const handleDeleteProject = async function () {
+    try {
+      await mutate(
+        deleteProject(projectName),
+        deleteProjectOptions(projectName)
+      );
     } catch (err) {
       //toast here
     } finally {
@@ -139,7 +155,7 @@ export default function ProjectSwitcher() {
                       Add Project
                     </CommandItem>
                     <CommandItem>
-                      <DeleteProjectAlert projectName={projectName} />
+                      <DeleteProjectAlert deleteHandler={handleDeleteProject} />
                       Delete selected project
                     </CommandItem>
                   </>

@@ -9,40 +9,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { toast } from '../ui/use-toast';
+
 import { CrossCircledIcon } from '@radix-ui/react-icons';
-import { useRouter } from 'next/navigation';
-import useSWR from 'swr';
-import {
-  deleteProject,
-  projectsUrlEndpoint as cacheKey,
-} from '../../app/api/projectApi';
-import { deleteProjectOptions } from '../../app/api/projectSWROptions';
 
 type DeleteProjectAlertTypes = {
-  projectName: string;
+  deleteHandler: React.MouseEventHandler<HTMLButtonElement>;
 };
 
 export default function DeleteProjectAlert({
-  projectName,
+  deleteHandler,
 }: DeleteProjectAlertTypes) {
-  const router = useRouter();
-
-  const { error, mutate } = useSWR(cacheKey, deleteProject);
-  const handleDeleteProject = async function (projectName: string) {
-    try {
-      console.log(projectName);
-      // await mutate(
-      //   deleteProject(projectName),
-      //   deleteProjectOptions(projectName)
-      // );
-      // router.push('/dashoard');
-    } catch (err) {
-      //toast here
-      console.log(err);
-    }
-  };
-
   return (
     <div>
       <AlertDialog>
@@ -58,7 +34,7 @@ export default function DeleteProjectAlert({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => handleDeleteProject(projectName)}>
+            <AlertDialogAction onClick={deleteHandler}>
               Continue
             </AlertDialogAction>
           </AlertDialogFooter>
