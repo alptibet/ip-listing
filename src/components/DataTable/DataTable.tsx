@@ -32,7 +32,7 @@ import { Device, columns } from './Columns';
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
     editRow: (rowIndex: number, columnId: string, value: string) => void;
-    addRow: (newRow: Promise<Device>) => void;
+    addRow: () => void;
     removeRow: (rowIndex: number) => void;
     removeSelectedRows: (selectedRow: number[]) => void;
     revertData: (rowIndex: number, revert: boolean) => void;
@@ -42,13 +42,15 @@ declare module '@tanstack/react-table' {
   }
 }
 
-export function DataTable({ project }: any) {
+export function DataTable({ deviceData }: any) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState(() => [...project.devices]);
-  const [originalData, setOriginalData] = useState(() => [...project.devices]);
+  const [data, setData] = useState(() => [...deviceData.devices]);
+  const [originalData, setOriginalData] = useState(() => [
+    ...deviceData.devices,
+  ]);
   const [inEditMode, setInEditMode] = useState({});
   const table = useReactTable({
     data,
@@ -71,10 +73,10 @@ export function DataTable({ project }: any) {
       rowSelection,
     },
     meta: {
-      project,
+      project: deviceData,
       inEditMode,
       setInEditMode,
-      revertData: (rowIndex, revert) => {
+      revertData: (rowIndex: number, revert: boolean) => {
         if (revert) {
           setData((old) =>
             old.map((row, index) =>
@@ -87,11 +89,21 @@ export function DataTable({ project }: any) {
           );
         }
       },
-      addRow: (newRow) => {
+      addRow: () => {
+        const newRow: Device = {
+          id: '',
+          name: '',
+          location: '',
+          ipAddress: '',
+          subnet: '',
+          gateway: '',
+          status: 'Not Assigned',
+          system: '',
+        };
         setData((old) => [...old, newRow]);
         setOriginalData((old) => [...old, newRow]);
       },
-      editRow: (rowIndex, columnId, value) => {
+      editRow: (rowIndex: number, columnId: string, value: string) => {
         setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
@@ -104,7 +116,7 @@ export function DataTable({ project }: any) {
           })
         );
       },
-      removeRow: (rowIndex) => {
+      removeRow: (rowIndex: number) => {
         const oldData = [...data];
         const newData = oldData.filter(
           (_row: Device, index: number) => index !== rowIndex
@@ -113,7 +125,7 @@ export function DataTable({ project }: any) {
         setOriginalData(newData);
         setRowSelection({});
       },
-      removeSelectedRows: (selectedRows) => {
+      removeSelectedRows: (selectedRows: number[]) => {
         const oldData = [...data];
         const newData = oldData.filter(
           (_row: Device, index: number) => !selectedRows.includes(index)

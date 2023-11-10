@@ -74,6 +74,7 @@ export default function ProjectSwitcher() {
       //toast here
     } finally {
       setShowNewProjectDialog(false);
+      setShowPopover(false);
     }
   };
 
@@ -85,6 +86,8 @@ export default function ProjectSwitcher() {
       );
     } catch (err) {
       //toast here
+    } finally {
+      setShowPopover(false);
     }
   };
 

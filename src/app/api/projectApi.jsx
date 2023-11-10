@@ -4,7 +4,12 @@ const projectsApi = axios.create({
   baseURL: 'http://localhost:3000/api',
 });
 
+const devicesApi = axios.create({
+  baseURL: 'http://localhost:3000/api/projects',
+});
+
 export const projectsUrlEndpoint = '/projects';
+export const devicesUrlEndpoint = '/';
 
 export const getProjects = async () => {
   const response = await projectsApi.get(projectsUrlEndpoint);
@@ -28,5 +33,10 @@ export const deleteProject = async (name) => {
       'Content-Type': 'application/json',
     },
   });
+  return response.data;
+};
+
+export const getDevices = async () => {
+  const response = await devicesApi.get(devicesUrlEndpoint);
   return response.data;
 };
