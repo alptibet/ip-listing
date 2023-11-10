@@ -2,8 +2,3 @@
 -- add hyperlinks to ip addresses
 -- import from excel
 -- implement zod for ip fields entry
--- remove project
--- do LOADING PROJECT beautiful
--- implement user feedback while creating editing device
--- implement user feedback after create edit delete
--- implement search
