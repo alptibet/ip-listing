@@ -11,9 +11,16 @@ export const getProjects = async () => {
   return response.data;
 };
 
-export const addProject = async ({ project }) => {
+export const addProject = async (name) => {
   const response = await projectsApi.post(projectsUrlEndpoint, {
-    project,
+    name,
+  });
+  return response.data;
+};
+
+export const deleteProject = async (id) => {
+  const response = await projectsApi.delete(projectsUrlEndpoint, {
+    id,
   });
   return response.data;
 };

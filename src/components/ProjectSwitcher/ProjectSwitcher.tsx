@@ -43,16 +43,10 @@ import {
 } from '../../app/api/projectApi';
 import { addProjectOptions } from '../../app/api/projectSWROptions';
 
-type NewProject = {
-  name: string;
-};
-
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [projects, setProjects] = useState([{ id: '', name: '' }]);
-  const [newProject, setNewProject] = useState<NewProject>({ name: '' });
+  const [newProject, setNewProject] = useState('');
   const [isEditedProjects, setIsEditedProjects] = useState(true);
 
   const router = useRouter();
@@ -63,14 +57,20 @@ export default function ProjectSwitcher() {
     router.push(path);
   }
 
-  const { isLoading, error, data, mutate } = useSWR(cacheKey, getProjects);
+  const {
+    isLoading,
+    error,
+    data: projects,
+    mutate,
+  } = useSWR(cacheKey, getProjects);
 
   async function handleNewProject() {
     try {
-      console.log(newProject);
       await mutate(addProject(newProject), addProjectOptions(newProject));
     } catch (err) {
-      console.log(err);
+      //toast here
+    } finally {
+      setShowNewProjectDialog(false);
     }
   }
 
@@ -103,7 +103,7 @@ export default function ProjectSwitcher() {
                 {error && <p>Error loading projects</p>}
                 {!isLoading &&
                   !error &&
-                  data.map((project) => {
+                  projects.map((project: { id: string; name: string }) => {
                     return (
                       <CommandItem
                         key={project.id}
@@ -168,9 +168,9 @@ export default function ProjectSwitcher() {
           <Input
             id="name"
             placeholder="Project name"
-            value={newProject.name}
+            value={newProject}
             onChange={(e) => {
-              setNewProject({ name: e.target.value.toUpperCase() });
+              setNewProject(e.target.value.toUpperCase());
             }}
           />
         </div>
