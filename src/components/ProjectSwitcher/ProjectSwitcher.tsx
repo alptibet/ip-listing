@@ -74,10 +74,6 @@ export default function ProjectSwitcher() {
     }
   };
 
-  const handleDelete = function () {
-    setIsEditedProjects(true);
-  };
-
   return (
     <Dialog open={showNewProjectDialog} onOpenChange={setShowNewProjectDialog}>
       <Popover open={showPopover} onOpenChange={setShowPopover}>
@@ -143,10 +139,7 @@ export default function ProjectSwitcher() {
                       Add Project
                     </CommandItem>
                     <CommandItem>
-                      <DeleteProjectAlert
-                        projectName={projectName}
-                        handleDelete={handleDelete}
-                      />
+                      <DeleteProjectAlert projectName={projectName} />
                       Delete selected project
                     </CommandItem>
                   </>

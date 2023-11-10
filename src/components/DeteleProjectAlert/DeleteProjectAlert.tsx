@@ -19,34 +19,30 @@ import {
 } from '../../app/api/projectApi';
 import { deleteProjectOptions } from '../../app/api/projectSWROptions';
 
-type propTypes = {
+type DeleteProjectAlertTypes = {
   projectName: string;
-  handleDelete: Function;
 };
 
 export default function DeleteProjectAlert({
   projectName,
-  handleDelete,
-}: propTypes) {
+}: DeleteProjectAlertTypes) {
   const router = useRouter();
 
   const { error, mutate } = useSWR(cacheKey, deleteProject);
   const handleDeleteProject = async function (projectName: string) {
-    console.log(projectName);
     try {
-      await mutate(
-        deleteProject(projectName),
-        deleteProjectOptions(projectName)
-      );
-      router.push('/dashoard');
+      console.log(projectName);
+      // await mutate(
+      //   deleteProject(projectName),
+      //   deleteProjectOptions(projectName)
+      // );
+      // router.push('/dashoard');
     } catch (err) {
       //toast here
       console.log(err);
-    } finally {
-      handleDelete();
     }
   };
-  console.log(error);
+
   return (
     <div>
       <AlertDialog>
