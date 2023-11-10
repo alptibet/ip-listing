@@ -13,7 +13,6 @@ import {
   deleteDevice,
   devicesUrlEndpoint as cacheKey,
 } from '../../app/api/devicesApi';
-// import { addDeviceOptions } from '../../app/api/devicesSWROptions';
 
 type TableToolBarProps = {
   table: Table<Device>;
@@ -28,7 +27,6 @@ export default function TableToolbar({ table }: TableToolBarProps) {
   const { mutate } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
 
   const handleDeleteDevice = async function () {
-    const projectName = tableMeta?.project.name;
     const itemsToDelete = table
       .getSelectedRowModel()
       .rows.map((item) => item.original)

@@ -29,13 +29,27 @@ export const addDevice = async (params) => {
 };
 
 export const deleteDevice = async (params) => {
-  console.log(params);
   const projectName = params[1];
   const devices = params[0];
   const response = await devicesApi.delete(
     `${devicesUrlEndpoint}/${projectName}`,
     {
       data: devices,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  return response.data;
+};
+
+export const updateDevice = async (params) => {
+  const projectName = params[1];
+  const device = params[0];
+  const response = await devicesApi.patch(
+    `${devicesUrlEndpoint}/${projectName}`,
+    {
+      data: device,
       headers: {
         'Content-Type': 'application/json',
       },

@@ -17,6 +17,15 @@ import { Row, Table } from '@tanstack/react-table';
 import { useState } from 'react';
 import { toast } from '../ui/use-toast';
 
+import useSWR from 'swr';
+import {
+  getDevices,
+  addDevice,
+  deleteDevice,
+  devicesUrlEndpoint as cacheKey,
+  updateDevice,
+} from '../../app/api/devicesApi';
+
 interface ActionsProps<TData> {
   tableRow: Row<Device>;
   table: Table<TData>;
@@ -25,10 +34,9 @@ interface ActionsProps<TData> {
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const tableMeta = table.options.meta;
-
-  const removeRow = function () {
-    tableMeta?.removeRow(tableRow.index);
-  };
+  const projectName = tableMeta?.project.name;
+  const projectId = tableMeta?.project.id;
+  const { mutate } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
 
   const setInEditMode = function (e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
@@ -43,10 +51,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     }
   };
 
-  const handleAddDevice = function () {
-    const projectName = tableMeta?.project.name;
-    const projectId = tableMeta?.project.id;
-
+  const handleNewDevice = async function () {
     const newDevice = {
       name: '',
       location: '',
@@ -57,50 +62,26 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       system: '',
       projectId,
     };
-    const newRow = async function (): Promise<Device> {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/projects/${projectName}`,
-          {
-            method: 'POST',
-            body: JSON.stringify(newDevice),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!response.ok) {
-          const errorResponse = await response.json();
-          const error = errorResponse.message;
-          toast({
-            title: 'Error',
-            description: `${error}`,
-            duration: 3000,
-            variant: 'destructive',
-          });
-        }
-        const data = await response.json();
-        table.options.meta?.addRow(data);
-        toast({
-          title: 'New device added.',
-          description: 'You can edit device details now.',
-          duration: 3000,
-        });
-        return data;
-      } catch (error: any) {
-        toast({
-          title: 'Something went wrong...',
-          description: `${error.message}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-        throw new Error('There was an error creating project');
-      }
-    };
-    newRow();
+    let data;
+    try {
+      await mutate((data = await addDevice([newDevice, projectName])));
+      tableMeta?.addRow(data);
+      toast({
+        title: 'New device added.',
+        description: 'You can edit device details now.',
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
+    }
   };
 
-  const handleSave = async function () {
+  const handleUpdateDevice = async function () {
     const editedDevice = {
       id: tableRow.original.id,
       name: tableRow.original.name,
@@ -110,30 +91,10 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       gateway: tableRow.original.gateway,
       status: tableRow.original.status,
       system: tableRow.original.system,
-      projectId: tableMeta?.project.id,
+      projectId,
     };
-    const projectName = tableMeta?.project.name;
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/projects/${projectName}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify(editedDevice),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        const error = errorResponse.message;
-        toast({
-          title: 'Error',
-          description: `${error}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-      }
+      await mutate(updateDevice([editedDevice, projectName]));
       toast({
         description: 'Saving changes.',
         duration: 3000,
@@ -145,38 +106,18 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         duration: 3000,
         variant: 'destructive',
       });
-      throw new Error('There was an error creating project');
     }
   };
 
   const handleDelete = async function () {
-    const projectName = tableMeta?.project.name;
     const deviceId = [tableRow?.original.id];
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/projects/${projectName}`,
-        {
-          method: 'DELETE',
-          body: JSON.stringify(deviceId),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        const error = errorResponse.message;
-        toast({
-          title: 'Error',
-          description: `${error}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-      }
+      await mutate(deleteDevice([deviceId, projectName]));
       toast({
-        description: 'Device deleted.',
+        description: 'Device(s) deleted.',
         duration: 3000,
       });
+      tableMeta?.removeRow(tableRow.index);
     } catch (error: any) {
       toast({
         title: 'Something went wrong...',
@@ -184,7 +125,6 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         duration: 3000,
         variant: 'destructive',
       });
-      throw new Error('There was an error creating project');
     }
   };
 
@@ -192,7 +132,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
     <div className="flex gap-2">
       <Button
         onClick={(e) => {
-          handleSave();
+          handleUpdateDevice();
           setViewEditActions(false);
           setInEditMode(e);
         }}
@@ -222,7 +162,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <Separator />
         <DropdownMenuItem>Copy IP Address</DropdownMenuItem>
-        <DropdownMenuItem onClick={handleAddDevice}>Add Row</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleNewDevice}>Add Row</DropdownMenuItem>
         <DropdownMenuItem
           id="edit"
           onClick={(e) => {
@@ -236,7 +176,6 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
           id="remove"
           onClick={() => {
             handleDelete();
-            removeRow();
           }}
         >
           Delete Item
