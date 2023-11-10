@@ -20,8 +20,7 @@ export default function DashboardPage({
     isLoading,
     error,
     data: devices,
-  } = useSWR(`${cacheKey}/${name.toUpperCase()}`, getDevices);
-
+  } = useSWR([cacheKey, name.toUpperCase()], getDevices);
   if (isLoading) {
     return (
       <div>

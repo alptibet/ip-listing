@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 const projectsApi = axios.create({
-  baseURL: 'http://localhost:3000/api',
+  baseURL: 'http://localhost:3000',
 });
 
-export const projectsUrlEndpoint = '/projects';
+export const projectsUrlEndpoint = '/api/projects';
 
 export const getProjects = async () => {
   const response = await projectsApi.get(projectsUrlEndpoint);
@@ -31,9 +31,12 @@ export const deleteProject = async (name) => {
   return response.data;
 };
 
-export const getDevices = async () => {
-  //   const response = await projectsApi.get(projectsUrlEndpoint);
-  //   return response.data;
+export const getDevices = async (params) => {
+  const projectName = params[1];
+  const response = await projectsApi.get(
+    `${projectsUrlEndpoint}/${projectName}`
+  );
+  return response.data;
 };
 
 export const addDevice = async (device) => {

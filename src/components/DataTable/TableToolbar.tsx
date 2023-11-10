@@ -105,7 +105,7 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         await mutate(addDevice(newDevice), addDeviceOptions(newDevice));
       } catch (err) {
         //toast here
-        console.log(err);
+        // console.log(err);
       }
     };
     newRow();
