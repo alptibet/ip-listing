@@ -6,7 +6,6 @@ const devicesApi = axios.create({
       ? process.env.NEXT_PUBLIC_URL
       : 'http://localhost:3000',
 });
-console.log(window.location.protocol + '//' + window.location.hostname);
 
 export const devicesUrlEndpoint = '/api/projects';
 
