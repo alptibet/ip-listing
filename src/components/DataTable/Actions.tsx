@@ -161,7 +161,13 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <Separator />
-        <DropdownMenuItem>Copy IP Address</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() =>
+            navigator.clipboard.writeText(tableRow.getValue('ipAddress'))
+          }
+        >
+          Copy IP Address
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleNewDevice}>Add Row</DropdownMenuItem>
         <DropdownMenuItem
           id="edit"
