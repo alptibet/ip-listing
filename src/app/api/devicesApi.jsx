@@ -8,6 +8,12 @@ const devicesApi = axios.create({
 });
 
 export const devicesUrlEndpoint = '/api/projects';
+export const allDevicesEndpoint = '/api/devices';
+
+export const getAllDevices = async () => {
+  const response = await devicesApi.get(allDevicesEndpoint);
+  return response.data;
+};
 
 export const getDevices = async (params) => {
   const projectName = params[1];
