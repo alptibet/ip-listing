@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbClient } from '@/db/db';
-import { drizzle } from 'drizzle-orm/postgres-js';
 import { projects } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
