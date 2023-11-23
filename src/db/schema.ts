@@ -8,7 +8,7 @@ export const projects = pgTable('projects', {
   name: varchar('name', { length: 16 }),
 });
 
-export const deviceRelations = relations(projects, ({ many }) => ({
+export const projectRelations = relations(projects, ({ many }) => ({
   devices: many(devices),
 }));
 
@@ -18,9 +18,15 @@ export const devices = pgTable('devices', {
   location: varchar('location', { length: 16 }),
   ipAddress: varchar('ip_address'),
   subnet: varchar('subnet'),
-  netmask: varchar('netmask'),
   gateway: varchar('gateway'),
   status: statusEnum('status'),
   system: varchar('system'),
-  projectId: integer('project_id').references(() => projects.id),
+  projectId: integer('project_id'),
 });
+
+export const deviceRelations = relations(devices, ({ one }) => ({
+  project: one(projects, {
+    fields: [devices.projectId],
+    references: [projects.id],
+  }),
+}));

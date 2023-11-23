@@ -1,5 +1,5 @@
 {
-  "id": "f03cbdca-7964-4a69-bbea-f87a5eb7b459",
+  "id": "b6bc7e7f-3d7a-4dea-a6c3-9e63eeeec94b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -38,12 +38,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "netmask": {
-          "name": "netmask",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
         "gateway": {
           "name": "gateway",
           "type": "varchar",
@@ -70,21 +64,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "devices_project_id_projects_id_fk": {
-          "name": "devices_project_id_projects_id_fk",
-          "tableFrom": "devices",
-          "tableTo": "projects",
-          "columnsFrom": [
-            "project_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

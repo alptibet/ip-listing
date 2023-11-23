@@ -1,22 +1,17 @@
-import pg from 'pg';
-import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { migrate } from 'drizzle-orm/vercel-postgres/migrator';
+import postgres from 'postgres';
+import { migrate } from 'drizzle-orm/postgres-js/migrator';
+import { drizzle } from 'drizzle-orm/postgres-js';
 import 'dotenv/config';
 
-const { Pool } = pg;
-
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL + '?sslmode=require',
-});
-
-const dbClient = drizzle(pool);
+const migrationClient = postgres(process.env.DB_URL!, { max: 1 });
 
 async function connect() {
   try {
     console.log('migration started...');
-    await migrate(dbClient, { migrationsFolder: 'drizzle' });
+    await migrate(drizzle(migrationClient), { migrationsFolder: 'drizzle' });
     console.log('migration finished...');
   } catch (error) {
+    console.log('migration finished with errors');
     console.log(error);
     process.exit(0);
   }
