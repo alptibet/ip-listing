@@ -20,7 +20,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   try {
-    const newProject = await dbClient.insert(projects).values(body);
+    const newProject = await dbClient.insert(projects).values(body).returning();
     return NextResponse.json(newProject, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
@@ -37,7 +37,8 @@ export async function DELETE(req: NextRequest) {
   try {
     const deleteDevice = await dbClient
       .delete(projects)
-      .where(eq(projects.name, body));
+      .where(eq(projects.name, body))
+      .returning();
     return NextResponse.json(deleteDevice, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
