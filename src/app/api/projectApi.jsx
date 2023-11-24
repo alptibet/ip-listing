@@ -17,9 +17,6 @@ export const getProjects = async () => {
 export const addProject = async (name) => {
   const response = await projectsApi.post(projectsUrlEndpoint, {
     name,
-    headers: {
-      'Content-Type': 'application/json',
-    },
   });
   return response.data;
 };
@@ -27,9 +24,6 @@ export const addProject = async (name) => {
 export const deleteProject = async (name) => {
   const response = await projectsApi.delete(projectsUrlEndpoint, {
     data: name,
-    headers: {
-      'Content-Type': 'application/json',
-    },
   });
   return response.data;
 };

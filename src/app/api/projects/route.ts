@@ -5,7 +5,9 @@ import { eq } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    const projects = await dbClient.query.projects.findMany();
+    const projects = await dbClient.query.projects.findMany({
+      with: { devices: true },
+    });
     return NextResponse.json(projects, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(

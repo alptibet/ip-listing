@@ -1,17 +1,22 @@
-// import prisma from '@/lib/prisma';
-// import { Prisma } from '@prisma/client';
-// import { NextResponse } from 'next/server';
-//
-// export async function GET() {
-//   try {
-//     const numDevices = await prisma.device.count();
-//     return NextResponse.json(numDevices, { status: 200 });
-//   } catch (error: Prisma.PrismaClientKnownRequestError | any) {
-//     return NextResponse.json(
-//       {
-//         message: error.message,
-//       },
-//       { status: 400 }
-//     );
-//   }
-// }
+import { NextResponse } from 'next/server';
+import { dbClient } from '@/db/db';
+import { devices } from '@/db/schema';
+import { sql } from 'drizzle-orm';
+
+export async function GET() {
+  try {
+    const numDevices = await dbClient
+      .select({
+        count: sql<number>`cast(count(${devices.id})) as int`,
+      })
+      .from(devices);
+    return NextResponse.json(numDevices, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json(
+      {
+        message: error.message,
+      },
+      { status: 400 }
+    );
+  }
+}

@@ -28,9 +28,6 @@ export const addDevice = async (params) => {
     `${devicesUrlEndpoint}/${projectName}`,
     {
       device,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     }
   );
 
@@ -44,9 +41,6 @@ export const deleteDevice = async (params) => {
     `${devicesUrlEndpoint}/${projectName}`,
     {
       data: devices,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     }
   );
   return response.data;
@@ -59,9 +53,6 @@ export const updateDevice = async (params) => {
     `${devicesUrlEndpoint}/${projectName}`,
     {
       data: device,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     }
   );
   return response.data;
