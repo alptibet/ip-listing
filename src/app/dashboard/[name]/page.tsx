@@ -47,7 +47,6 @@ export default function DashboardPage({
       </div>
     );
   } else {
-    console.log(devices);
     return (
       <div className="mx-2 my-2">
         <DataTable deviceData={devices} />

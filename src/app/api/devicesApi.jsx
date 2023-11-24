@@ -30,8 +30,7 @@ export const addDevice = async (params) => {
       device,
     }
   );
-
-  return response.data;
+  return response.data[0];
 };
 
 export const deleteDevice = async (params) => {
