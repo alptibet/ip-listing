@@ -19,7 +19,7 @@ export const devices = pgTable('devices', {
   ipAddress: varchar('ip_address'),
   subnet: varchar('subnet'),
   gateway: varchar('gateway'),
-  status: statusEnum('status'),
+  status: statusEnum('status').default('Not Assigned'),
   system: varchar('system'),
   projectId: integer('project_id'),
 });

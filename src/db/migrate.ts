@@ -10,6 +10,7 @@ async function connect() {
     console.log('migration started...');
     await migrate(drizzle(migrationClient), { migrationsFolder: 'drizzle' });
     console.log('migration finished...');
+    process.exit(0);
   } catch (error) {
     console.log('migration finished with errors');
     console.log(error);
