@@ -22,8 +22,10 @@ export const addProject = async (name) => {
 };
 
 export const deleteProject = async (name) => {
+  console.log(name);
   const response = await projectsApi.delete(projectsUrlEndpoint, {
     data: name,
   });
+  console.log(response);
   return response.data;
 };

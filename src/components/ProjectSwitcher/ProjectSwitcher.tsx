@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import {
@@ -34,7 +34,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import DeleteProjectAlert from '../DeteleProjectAlert/DeleteProjectAlert';
-// import { toast } from '../ui/use-toast';
 import useSWR from 'swr';
 import {
   getProjects,
@@ -42,10 +41,7 @@ import {
   deleteProject,
   projectsUrlEndpoint as cacheKey,
 } from '../../app/api/projectApi';
-import {
-  addProjectOptions,
-  deleteProjectOptions,
-} from '../../app/api/projectSWROptions';
+import { addProjectOptions } from '../../app/api/projectSWROptions';
 import { toast } from '../ui/use-toast';
 
 export default function ProjectSwitcher() {
@@ -91,8 +87,8 @@ export default function ProjectSwitcher() {
   const handleDeleteProject = async function () {
     try {
       await mutate(
-        deleteProject(projectName),
-        deleteProjectOptions(projectName)
+        deleteProject({ name: projectName })
+        // deleteProjectOptions(projectName)
       );
       toast({
         description: 'Project deleted.',
