@@ -11,12 +11,13 @@ CREATE TABLE IF NOT EXISTS "devices" (
 	"ip_address" varchar,
 	"subnet" varchar,
 	"gateway" varchar,
-	"status" "status",
+	"status" "status" DEFAULT 'Not Assigned',
 	"system" varchar,
 	"project_id" integer
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "projects" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"name" varchar(16)
+	"name" varchar(16) NOT NULL,
+	CONSTRAINT "projects_name_unique" UNIQUE("name")
 );

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbClient } from '@/db/db';
 import { devices } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 
 export async function GET(
   request: NextRequest,
@@ -46,8 +46,16 @@ export async function PATCH(req: NextRequest) {
   try {
     const updateDevice = await dbClient
       .update(devices)
-      .set({}) //complete
-      .where(eq(devices.id, body.data.id))
+      .set({
+        name: body.name,
+        location: body.location,
+        ipAddress: body.ipAddress,
+        subnet: body.subnet,
+        gateway: body.gateway,
+        status: body.status,
+        system: body.system,
+      })
+      .where(eq(devices.id, body.id))
       .returning();
     return NextResponse.json(updateDevice, { status: 201 });
   } catch (error: any) {
@@ -65,9 +73,9 @@ export async function DELETE(req: NextRequest) {
   try {
     const deleteDevice = await dbClient
       .delete(devices)
-      .where(eq(devices.id, body.data.id))
+      .where(inArray(devices.id, body))
       .returning();
-    return NextResponse.json({ updateDevice: deleteDevice }, { status: 201 });
+    return NextResponse.json({ deleteDevice }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
       {

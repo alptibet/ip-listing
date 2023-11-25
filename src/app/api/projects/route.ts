@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { dbClient } from '@/db/db';
-import { projects } from '@/db/schema';
+import { devices, projects } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function GET() {
@@ -42,7 +42,9 @@ export async function DELETE(req: NextRequest) {
   try {
     const deleteProject = await dbClient
       .delete(projects)
-      .where(eq(projects.name, body.name));
+      .where(eq(projects.name, body.name))
+      .returning();
+    console.log(deleteProject);
     return NextResponse.json(deleteProject, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(

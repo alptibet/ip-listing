@@ -27,10 +27,9 @@ export default function TableToolbar({ table }: TableToolBarProps) {
   const { mutate } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
 
   const handleDeleteDevice = async function () {
-    const itemsToDelete = table
-      .getSelectedRowModel()
-      .rows.map((item) => item.original)
-      .map((item) => item.id);
+    const itemsToDelete = table.getSelectedRowModel().rows.map((item) => {
+      return item.original.id;
+    });
 
     if (itemsToDelete.length === 0) {
       toast({

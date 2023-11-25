@@ -3,7 +3,7 @@ import axios from 'axios';
 const projectsApi = axios.create({
   baseURL:
     process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_URL
+      ? process.env.DB_URL
       : 'http://localhost:3000',
 });
 
@@ -22,10 +22,8 @@ export const addProject = async (name) => {
 };
 
 export const deleteProject = async (name) => {
-  console.log(name);
   const response = await projectsApi.delete(projectsUrlEndpoint, {
     data: name,
   });
-  console.log(response);
   return response.data;
 };

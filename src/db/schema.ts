@@ -1,11 +1,18 @@
-import { integer, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import {
+  integer,
+  json,
+  pgEnum,
+  pgTable,
+  serial,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const statusEnum = pgEnum('status', ['Assigned', 'Not Assigned']);
 
 export const projects = pgTable('projects', {
   id: serial('id').primaryKey(),
-  name: varchar('name', { length: 16 }),
+  name: varchar('name', { length: 16 }).notNull().unique(),
 });
 
 export const projectRelations = relations(projects, ({ many }) => ({
@@ -23,6 +30,8 @@ export const devices = pgTable('devices', {
   system: varchar('system'),
   projectId: integer('project_id'),
 });
+
+export type Device = typeof devices.$inferSelect;
 
 export const deviceRelations = relations(devices, ({ one }) => ({
   project: one(projects, {

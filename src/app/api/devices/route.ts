@@ -5,12 +5,8 @@ import { sql } from 'drizzle-orm';
 
 export async function GET() {
   try {
-    const numDevices = await dbClient
-      .select({
-        count: sql<number>`cast(count(${devices.id})) as int`,
-      })
-      .from(devices);
-    return NextResponse.json(numDevices, { status: 200 });
+    const numDevices = await dbClient.query.devices.findMany({});
+    return NextResponse.json(numDevices.length, { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       {

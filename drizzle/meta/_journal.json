@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1700768153361,
-      "tag": "0000_curved_the_hood",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1700852757454,
-      "tag": "0001_faithful_thanos",
+      "when": 1700947292355,
+      "tag": "0000_shiny_komodo",
       "breakpoints": true
     }
   ]

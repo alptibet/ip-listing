@@ -41,7 +41,6 @@ import {
   deleteProject,
   projectsUrlEndpoint as cacheKey,
 } from '../../app/api/projectApi';
-import { addProjectOptions } from '../../app/api/projectSWROptions';
 import { toast } from '../ui/use-toast';
 
 export default function ProjectSwitcher() {
@@ -66,7 +65,7 @@ export default function ProjectSwitcher() {
 
   const handleNewProject = async function () {
     try {
-      await mutate(addProject(newProject), addProjectOptions(newProject));
+      await mutate(addProject(newProject));
       toast({
         description: 'Project created.',
         duration: 3000,
@@ -80,16 +79,14 @@ export default function ProjectSwitcher() {
       });
     } finally {
       setShowNewProjectDialog(false);
+      setNewProject('');
       router.push(`/dashboard/${newProject}`);
     }
   };
 
   const handleDeleteProject = async function () {
     try {
-      await mutate(
-        deleteProject({ name: projectName })
-        // deleteProjectOptions(projectName)
-      );
+      await mutate(deleteProject({ name: projectName }));
       toast({
         description: 'Project deleted.',
         duration: 3000,
@@ -203,7 +200,9 @@ export default function ProjectSwitcher() {
         </div>
         <DialogFooter className="mr-auto flex items-center justify-between">
           <div className="flex gap-2">
-            <Button onClick={handleNewProject}>Submit</Button>
+            <Button disabled={!newProject} onClick={handleNewProject}>
+              Submit
+            </Button>
             <Button
               variant="destructive"
               onClick={() => setShowNewProjectDialog(false)}
