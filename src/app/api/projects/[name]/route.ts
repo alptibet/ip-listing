@@ -55,8 +55,8 @@ export async function PATCH(req: NextRequest) {
         status: body.status,
         system: body.system,
       })
-      .where(eq(devices.id, body.id));
-    // .returning();
+      .where(eq(devices.id, body.id))
+      .returning();
     return NextResponse.json(updateDevice, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
@@ -73,9 +73,9 @@ export async function DELETE(req: NextRequest) {
   try {
     const deleteDevice = await dbClient
       .delete(devices)
-      .where(inArray(devices.id, body));
-    // .returning();
-    return NextResponse.json({ deleteDevice }, { status: 201 });
+      .where(inArray(devices.id, body))
+      .returning();
+    return NextResponse.json(deleteDevice, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
       {
