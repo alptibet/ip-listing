@@ -18,7 +18,7 @@ export async function GET() {
     );
   }
 }
-
+console.log('fd');
 export async function POST(req: NextRequest) {
   const body = await req.json();
   try {
