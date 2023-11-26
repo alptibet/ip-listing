@@ -12,6 +12,7 @@ export const allDevicesEndpoint = '/api/devices';
 
 export const getAllDevices = async () => {
   const response = await devicesApi.get(allDevicesEndpoint);
+  console.log(response);
   return response.data;
 };
 
