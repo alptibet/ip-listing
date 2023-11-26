@@ -2,3 +2,4 @@
 -- add hyperlinks to ip addresses
 -- import from excel
 -- implement zod for ip fields entry
+-- when project deleted also delete its devices

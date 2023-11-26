@@ -3,7 +3,7 @@ import axios from 'axios';
 const devicesApi = axios.create({
   baseURL:
     process.env.NODE_ENV === 'production'
-      ? process.env.NEXT_PUBLIC_URL
+      ? process.env.DB_URL
       : 'http://localhost:3000',
 });
 
@@ -28,13 +28,9 @@ export const addDevice = async (params) => {
     `${devicesUrlEndpoint}/${projectName}`,
     {
       device,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     }
   );
-
-  return response.data;
+  return response.data[0];
 };
 
 export const deleteDevice = async (params) => {
@@ -44,9 +40,6 @@ export const deleteDevice = async (params) => {
     `${devicesUrlEndpoint}/${projectName}`,
     {
       data: devices,
-      headers: {
-        'Content-Type': 'application/json',
-      },
     }
   );
   return response.data;
@@ -57,12 +50,7 @@ export const updateDevice = async (params) => {
   const device = params[0];
   const response = await devicesApi.patch(
     `${devicesUrlEndpoint}/${projectName}`,
-    {
-      data: device,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
+    device
   );
   return response.data;
 };
