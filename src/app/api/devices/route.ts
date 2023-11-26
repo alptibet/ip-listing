@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import { dbClient } from '@/db/db';
-import { devices } from '@/db/schema';
-import { sql } from 'drizzle-orm';
 
 export async function GET() {
   try {
