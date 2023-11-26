@@ -6,6 +6,14 @@ import { Button } from '../ui/button';
 import { Device } from './Columns';
 import { toast } from '../ui/use-toast';
 
+import useSWR from 'swr';
+import {
+  getDevices,
+  addDevice,
+  deleteDevice,
+  devicesUrlEndpoint as cacheKey,
+} from '../../app/api/devicesApi';
+
 type TableToolBarProps = {
   table: Table<Device>;
 };
@@ -13,9 +21,12 @@ type TableToolBarProps = {
 export default function TableToolbar({ table }: TableToolBarProps) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const tableMeta = table.options.meta;
+  const projectName = tableMeta?.project.name;
+  const projectId = tableMeta?.project.id;
 
-  const handleRemove = async function () {
-    const projectName = tableMeta?.project.name;
+  const { mutate } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
+
+  const handleDeleteDevice = async function () {
     const itemsToDelete = table
       .getSelectedRowModel()
       .rows.map((item) => item.original)
@@ -30,28 +41,12 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       });
       return;
     }
-
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/projects/${projectName}`,
-        {
-          method: 'DELETE',
-          body: JSON.stringify(itemsToDelete),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
+      await mutate(deleteDevice([itemsToDelete, projectName]));
+      tableMeta?.removeSelectedRows(
+        table.getSelectedRowModel().rows.map((row) => row.index)
       );
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        const error = errorResponse.message;
-        toast({
-          title: 'Error',
-          description: `${error}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-      }
+      table.resetRowSelection();
       toast({
         description: 'Device(s) deleted.',
         duration: 3000,
@@ -63,19 +58,10 @@ export default function TableToolbar({ table }: TableToolBarProps) {
         duration: 3000,
         variant: 'destructive',
       });
-      throw new Error('There was an error deleting project');
     }
-
-    table.options.meta?.removeSelectedRows(
-      table.getSelectedRowModel().rows.map((row) => row.index)
-    );
-    table.resetRowSelection();
   };
 
-  const handleAddDevice = function () {
-    const projectName = tableMeta?.project.name;
-    const projectId = tableMeta?.project.id;
-
+  const handleNewDevice = async function () {
     const newDevice = {
       name: '',
       location: '',
@@ -86,47 +72,23 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       system: '',
       projectId,
     };
-    const newRow = async function (): Promise<Device> {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/api/projects/${projectName}`,
-          {
-            method: 'POST',
-            body: JSON.stringify(newDevice),
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        if (!response.ok) {
-          const errorResponse = await response.json();
-          const error = errorResponse.message;
-          toast({
-            title: 'Error',
-            description: `${error}`,
-            duration: 3000,
-            variant: 'destructive',
-          });
-        }
-        const data = await response.json();
-        table.options.meta?.addRow(data);
-        toast({
-          title: 'New device added.',
-          description: 'You can edit device details now.',
-          duration: 3000,
-        });
-        return data;
-      } catch (error: any) {
-        toast({
-          title: 'Something went wrong...',
-          description: `${error.message}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-        throw new Error('There was an error creating project');
-      }
-    };
-    newRow();
+    let data;
+    try {
+      await mutate((data = await addDevice([newDevice, projectName])));
+      tableMeta?.addRow(data);
+      toast({
+        title: 'New device added.',
+        description: 'You can edit device details now.',
+        duration: 3000,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
+    }
   };
 
   const systems = table.getColumn('system')?.getFacetedUniqueValues();
@@ -186,8 +148,8 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       </div>
       <div className="flex mb-4">
         <div className="flex gap-2">
-          <Button onClick={handleAddDevice}>Add Device</Button>
-          <Button variant="destructive" onClick={handleRemove}>
+          <Button onClick={handleNewDevice}>Add Device</Button>
+          <Button variant="destructive" onClick={handleDeleteDevice}>
             Remove Selected
           </Button>
         </div>

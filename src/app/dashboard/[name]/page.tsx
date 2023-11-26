@@ -4,33 +4,23 @@ import useSWR from 'swr';
 import { DataTable } from '@/components/DataTable/DataTable';
 import { Loader2 } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
-
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-const fetcher = async function (url: string) {
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  if (!response.ok) {
-    const error = new Error('An error occured while fetching project data');
-    throw error;
-  }
-  return response.json();
-};
+import {
+  getDevices,
+  devicesUrlEndpoint as cacheKey,
+} from '../../api/devicesApi';
 
 export default function DashboardPage({
   params: { name },
 }: {
   params: { name: string };
 }) {
-  const { data, error, isLoading } = useSWR(
-    `http://localhost:3000/api/projects/${name.toUpperCase()}`,
-    fetcher
-  );
-
+  const {
+    isLoading,
+    error,
+    data: devices,
+  } = useSWR([cacheKey, name.toUpperCase()], getDevices);
   if (isLoading) {
     return (
       <div>
@@ -38,16 +28,14 @@ export default function DashboardPage({
         <h2 className="inline ml-2">LOADING {name.toUpperCase()}...</h2>
       </div>
     );
-  }
-
-  if (error || !data) {
+  } else if (error || !devices) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Alert variant="destructive" className="ml-2 w-max">
           <AlertCircle className="h-4 w-4" />
           <AlertTitle>Error</AlertTitle>
           {error && <AlertDescription>{error.message}</AlertDescription>}
-          {!data && (
+          {!devices && (
             <AlertDescription>
               There was a problem fetching problem {name.toUpperCase()}.
             </AlertDescription>
@@ -58,11 +46,11 @@ export default function DashboardPage({
         </Alert>
       </div>
     );
+  } else {
+    return (
+      <div className="mx-2 my-2">
+        <DataTable deviceData={devices} />
+      </div>
+    );
   }
-
-  return (
-    <div className="mx-2 my-2">
-      <DataTable project={data} />
-    </div>
-  );
 }
