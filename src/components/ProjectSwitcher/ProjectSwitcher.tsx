@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter, useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import {
@@ -34,18 +34,19 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import DeleteProjectAlert from '../DeteleProjectAlert/DeleteProjectAlert';
+import useSWR from 'swr';
+import {
+  getProjects,
+  addProject,
+  deleteProject,
+  projectsUrlEndpoint as cacheKey,
+} from '../../app/api/projectApi';
 import { toast } from '../ui/use-toast';
-
-type NewProject = {
-  name: string;
-};
 
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
-  const [projects, setProjects] = useState([{ id: '', name: '' }]);
-  const [newProject, setNewProject] = useState<NewProject>({ name: '' });
-  const [isEditedProjects, setIsEditedProjects] = useState(true);
+  const [newProject, setNewProject] = useState('');
 
   const router = useRouter();
   const params = useParams();
@@ -55,59 +56,20 @@ export default function ProjectSwitcher() {
     router.push(path);
   }
 
-  useEffect(() => {
-    async function fetchProjects() {
-      if (isEditedProjects) {
-        try {
-          const response = await fetch('http://localhost:3000/api/projects');
-          const projects = await response.json();
-          setProjects(projects);
-          if (!response.ok) {
-            const errorResponse = await response.json();
-            const error = errorResponse.message;
-            toast({
-              title: 'Error',
-              description: `${error}`,
-              duration: 3000,
-              variant: 'destructive',
-            });
-          }
-        } catch (error) {
-          throw new Error('There was an error fetching projects');
-        } finally {
-          setIsEditedProjects(false);
-        }
-      } else {
-        return;
-      }
-    }
-    fetchProjects();
-  }, [isEditedProjects]);
+  const {
+    isLoading,
+    error,
+    data: projects,
+    mutate,
+  } = useSWR(cacheKey, getProjects);
 
-  async function addProject() {
+  const handleNewProject = async function () {
     try {
-      const response = await fetch('http://localhost:3000/api/projects', {
-        method: 'POST',
-        body: JSON.stringify(newProject),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        const error = errorResponse.message;
-        toast({
-          title: 'Error',
-          description: `${error}`,
-          duration: 3000,
-          variant: 'destructive',
-        });
-      }
+      await mutate(addProject(newProject));
       toast({
-        description: 'Created project.',
+        description: 'Project created.',
         duration: 3000,
       });
-      setIsEditedProjects(true);
     } catch (error: any) {
       toast({
         title: 'Something went wrong...',
@@ -115,15 +77,31 @@ export default function ProjectSwitcher() {
         duration: 3000,
         variant: 'destructive',
       });
-      throw new Error('There was an error creating project');
     } finally {
       setShowNewProjectDialog(false);
-      router.push(`/dashboard/${newProject.name}`);
+      setNewProject('');
+      router.push(`/dashboard/${newProject}`);
     }
-  }
+  };
 
-  const handleDelete = function () {
-    setIsEditedProjects(true);
+  const handleDeleteProject = async function () {
+    try {
+      await mutate(deleteProject({ name: projectName }));
+      toast({
+        description: 'Project deleted.',
+        duration: 3000,
+      });
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
+    } finally {
+      setShowPopover(false);
+    }
   };
 
   return (
@@ -147,27 +125,34 @@ export default function ProjectSwitcher() {
               <CommandInput placeholder="Search project..." />
               <CommandEmpty>No project found.</CommandEmpty>
               <CommandGroup heading="Projects">
-                {projects.map((project) => {
-                  return (
-                    <CommandItem
-                      key={project.id}
-                      className="text-sm flex items-center justify-between"
-                      onSelect={() => {
-                        setShowPopover(false);
-                        handleRoute(`/dashboard/${project.name.toLowerCase()}`);
-                      }}
-                    >
-                      {project.name}
-                      <CheckIcon
-                        className={cn(
-                          projectName === project.name
-                            ? 'opacity-100'
-                            : 'opacity-0'
-                        )}
-                      />
-                    </CommandItem>
-                  );
-                })}
+                {isLoading && <p>Loading Projects</p>}
+                {error && <p>Error loading projects</p>}
+                {!isLoading &&
+                  !error &&
+                  projects &&
+                  projects.map((project: { id: string; name: string }) => {
+                    return (
+                      <CommandItem
+                        key={project.id}
+                        className="text-sm flex items-center justify-between"
+                        onSelect={() => {
+                          setShowPopover(false);
+                          handleRoute(
+                            `/dashboard/${project.name.toLowerCase()}`
+                          );
+                        }}
+                      >
+                        {project.name}
+                        <CheckIcon
+                          className={cn(
+                            projectName === project.name
+                              ? 'opacity-100'
+                              : 'opacity-0'
+                          )}
+                        />
+                      </CommandItem>
+                    );
+                  })}
               </CommandGroup>
             </CommandList>
             <CommandSeparator />
@@ -185,10 +170,7 @@ export default function ProjectSwitcher() {
                       Add Project
                     </CommandItem>
                     <CommandItem>
-                      <DeleteProjectAlert
-                        projectName={projectName}
-                        handleDelete={handleDelete}
-                      />
+                      <DeleteProjectAlert deleteHandler={handleDeleteProject} />
                       Delete selected project
                     </CommandItem>
                   </>
@@ -210,15 +192,17 @@ export default function ProjectSwitcher() {
           <Input
             id="name"
             placeholder="Project name"
-            value={newProject.name}
+            value={newProject}
             onChange={(e) => {
-              setNewProject({ name: e.target.value.toUpperCase() });
+              setNewProject(e.target.value.toUpperCase());
             }}
           />
         </div>
         <DialogFooter className="mr-auto flex items-center justify-between">
           <div className="flex gap-2">
-            <Button onClick={addProject}>Submit</Button>
+            <Button disabled={!newProject} onClick={handleNewProject}>
+              Submit
+            </Button>
             <Button
               variant="destructive"
               onClick={() => setShowNewProjectDialog(false)}
