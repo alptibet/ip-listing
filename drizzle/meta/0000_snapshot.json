@@ -1,5 +1,5 @@
 {
-  "id": "a3df86f4-1cc8-46e2-98e8-6caa320d672a",
+  "id": "184ccac6-3356-4ee3-a306-4171df1af25a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
@@ -61,11 +61,25 @@
           "name": "project_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "devices_project_id_projects_id_fk": {
+          "name": "devices_project_id_projects_id_fk",
+          "tableFrom": "devices",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },

@@ -2,15 +2,23 @@
 
 import { Card, CardContent, CardTitle, CardHeader } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
-
 import useSWR from 'swr';
-import {
-  getProjects,
-  projectsUrlEndpoint as cacheKey,
-} from '../../app/api/projectApi';
+import axios from 'axios';
+
+const projectsApi = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
+});
+
+const fetcher = async function (url: string) {
+  const response = await projectsApi.get(url);
+  return response.data;
+};
 
 export default function ProjectsCard() {
-  const { isLoading, error, data } = useSWR(cacheKey, getProjects);
+  const { isLoading, error, data } = useSWR('api/projects', fetcher);
 
   let cardContent;
   if (isLoading) {

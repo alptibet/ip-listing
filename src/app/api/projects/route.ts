@@ -18,6 +18,7 @@ export async function GET() {
     );
   }
 }
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
   try {
@@ -48,7 +49,7 @@ export async function DELETE(req: NextRequest) {
       .delete(devices)
       .where(eq(devices.projectId, deleteProject[0].id));
 
-    return NextResponse.json(deleteProject, { status: 201 });
+    return NextResponse.json(deleteProject, { status: 202 });
   } catch (error: any) {
     return NextResponse.json(
       {

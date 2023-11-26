@@ -26,10 +26,7 @@ export async function GET(
 export async function POST(req: NextRequest) {
   const body = await req.json();
   try {
-    const newDevice = await dbClient
-      .insert(devices)
-      .values(body.device)
-      .returning();
+    const newDevice = await dbClient.insert(devices).values(body).returning();
     return NextResponse.json(newDevice, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
@@ -57,7 +54,7 @@ export async function PATCH(req: NextRequest) {
       })
       .where(eq(devices.id, body.id))
       .returning();
-    return NextResponse.json(updateDevice, { status: 201 });
+    return NextResponse.json(updateDevice[0], { status: 200 });
   } catch (error: any) {
     return NextResponse.json(
       {
@@ -75,7 +72,7 @@ export async function DELETE(req: NextRequest) {
       .delete(devices)
       .where(inArray(devices.id, body))
       .returning();
-    return NextResponse.json(deleteDevice, { status: 201 });
+    return NextResponse.json(deleteDevice[0], { status: 202 });
   } catch (error: any) {
     return NextResponse.json(
       {

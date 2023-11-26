@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS "devices" (
 	"gateway" varchar,
 	"status" "status" DEFAULT 'Not Assigned',
 	"system" varchar,
-	"project_id" integer
+	"project_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "projects" (
@@ -21,3 +21,9 @@ CREATE TABLE IF NOT EXISTS "projects" (
 	"name" varchar(16) NOT NULL,
 	CONSTRAINT "projects_name_unique" UNIQUE("name")
 );
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "devices" ADD CONSTRAINT "devices_project_id_projects_id_fk" FOREIGN KEY ("project_id") REFERENCES "projects"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;

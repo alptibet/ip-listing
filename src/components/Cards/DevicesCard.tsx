@@ -1,17 +1,24 @@
 'use client';
 
 import { Card, CardContent, CardTitle, CardHeader } from '@/components/ui/card';
-
 import useSWR from 'swr';
-
-import {
-  getAllDevices,
-  allDevicesEndpoint as cacheKey,
-} from '../../app/api/devicesApi';
 import { Loader2 } from 'lucide-react';
+import axios from 'axios';
+
+const devicesApi = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
+});
+
+const fetcher = async function (url: string) {
+  const response = await devicesApi.get(url);
+  return response.data;
+};
 
 export default function DevicesCard() {
-  const { isLoading, error, data } = useSWR(cacheKey, getAllDevices);
+  const { isLoading, error, data } = useSWR('api/devices', fetcher);
 
   let cardContent;
   if (isLoading) {

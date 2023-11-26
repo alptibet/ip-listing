@@ -16,27 +16,25 @@ import type { Device } from './Columns';
 import { Row, Table } from '@tanstack/react-table';
 import { useState } from 'react';
 import { toast } from '../ui/use-toast';
-
-import useSWR from 'swr';
-import {
-  getDevices,
-  addDevice,
-  deleteDevice,
-  devicesUrlEndpoint as cacheKey,
-  updateDevice,
-} from '../../app/api/devicesApi';
+import axios from 'axios';
 
 interface ActionsProps<TData> {
   tableRow: Row<Device>;
   table: Table<TData>;
 }
 
+const devicesApi = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
+});
+
 export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const tableMeta = table.options.meta;
   const projectName = tableMeta?.project.name;
   const projectId = tableMeta?.project.id;
-  const { mutate } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
 
   const setInEditMode = function (e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
@@ -62,10 +60,12 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       system: '',
       projectId,
     };
-    let data;
     try {
-      await mutate((data = await addDevice([newDevice, projectName])));
-      tableMeta?.addRow(data);
+      const response = await devicesApi.post(
+        `api/projects/${projectName}`,
+        newDevice
+      );
+      tableMeta?.addRow(response.data[0]);
       toast({
         title: 'New device added.',
         description: 'You can edit device details now.',
@@ -94,7 +94,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       projectId,
     };
     try {
-      await mutate(updateDevice([editedDevice, projectName]));
+      await devicesApi.patch(`api/projects/${projectName}`, editedDevice);
       toast({
         description: 'Saving changes.',
         duration: 3000,
@@ -112,7 +112,9 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
   const handleDelete = async function () {
     const deviceId = [tableRow?.original.id];
     try {
-      await mutate(deleteDevice([deviceId, projectName]));
+      await devicesApi.delete(`api/projects/${projectName}`, {
+        data: deviceId,
+      });
       toast({
         description: 'Device(s) deleted.',
         duration: 3000,

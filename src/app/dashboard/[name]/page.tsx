@@ -5,11 +5,19 @@ import { DataTable } from '@/components/DataTable/DataTable';
 import { Loader2 } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import axios from 'axios';
 
-import {
-  getDevices,
-  devicesUrlEndpoint as cacheKey,
-} from '../../api/devicesApi';
+const devicesApi = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
+});
+
+const fetcher = async function (url: string) {
+  const response = await devicesApi.get(url);
+  return response.data;
+};
 
 export default function DashboardPage({
   params: { name },
@@ -20,7 +28,8 @@ export default function DashboardPage({
     isLoading,
     error,
     data: devices,
-  } = useSWR([cacheKey, name.toUpperCase()], getDevices);
+  } = useSWR(`api/projects/${name.toUpperCase()}`, fetcher);
+
   if (isLoading) {
     return (
       <div>

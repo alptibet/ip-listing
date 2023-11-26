@@ -5,26 +5,24 @@ import ViewOptions from './ViewOptions';
 import { Button } from '../ui/button';
 import { Device } from './Columns';
 import { toast } from '../ui/use-toast';
-
-import useSWR from 'swr';
-import {
-  getDevices,
-  addDevice,
-  deleteDevice,
-  devicesUrlEndpoint as cacheKey,
-} from '../../app/api/devicesApi';
+import axios from 'axios';
 
 type TableToolBarProps = {
   table: Table<Device>;
 };
+
+const devicesApi = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
+});
 
 export default function TableToolbar({ table }: TableToolBarProps) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const tableMeta = table.options.meta;
   const projectName = tableMeta?.project.name;
   const projectId = tableMeta?.project.id;
-
-  const { mutate } = useSWR([cacheKey, projectName?.toUpperCase()], getDevices);
 
   const handleDeleteDevice = async function () {
     const itemsToDelete = table.getSelectedRowModel().rows.map((item) => {
@@ -41,7 +39,9 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       return;
     }
     try {
-      await mutate(deleteDevice([itemsToDelete, projectName]));
+      await devicesApi.delete(`api/projects/${projectName}`, {
+        data: itemsToDelete,
+      });
       tableMeta?.removeSelectedRows(
         table.getSelectedRowModel().rows.map((row) => row.index)
       );
@@ -71,10 +71,12 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       system: '',
       projectId,
     };
-    let data;
     try {
-      await mutate((data = await addDevice([newDevice, projectName])));
-      tableMeta?.addRow(data);
+      const response = await devicesApi.post(
+        `api/projects/${projectName}`,
+        newDevice
+      );
+      tableMeta?.addRow(response.data[0]);
       toast({
         title: 'New device added.',
         description: 'You can edit device details now.',

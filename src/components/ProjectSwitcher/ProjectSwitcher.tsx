@@ -42,6 +42,19 @@ import {
   projectsUrlEndpoint as cacheKey,
 } from '../../app/api/projectApi';
 import { toast } from '../ui/use-toast';
+import axios from 'axios';
+
+const projectsApi = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXT_PUBLIC_URL
+      : 'http://localhost:3000',
+});
+
+const fetcher = async function (url: string) {
+  const response = await projectsApi.get(url);
+  return response.data;
+};
 
 export default function ProjectSwitcher() {
   const [showPopover, setShowPopover] = useState(false);
@@ -61,11 +74,12 @@ export default function ProjectSwitcher() {
     error,
     data: projects,
     mutate,
-  } = useSWR(cacheKey, getProjects);
+  } = useSWR('api/projects', fetcher);
 
   const handleNewProject = async function () {
     try {
-      await mutate(addProject(newProject));
+      await projectsApi.post('api/projects/', { name: newProject });
+      mutate();
       toast({
         description: 'Project created.',
         duration: 3000,
@@ -86,7 +100,10 @@ export default function ProjectSwitcher() {
 
   const handleDeleteProject = async function () {
     try {
-      await mutate(deleteProject({ name: projectName }));
+      await projectsApi.delete('api/projects/', {
+        data: { name: projectName },
+      });
+      mutate();
       toast({
         description: 'Project deleted.',
         duration: 3000,
