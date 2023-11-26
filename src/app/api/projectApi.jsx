@@ -10,14 +10,22 @@ const projectsApi = axios.create({
 export const projectsUrlEndpoint = '/api/projects';
 
 export const getProjects = async () => {
-  const response = await projectsApi.get(projectsUrlEndpoint);
+  const response = await projectsApi.get(projectsUrlEndpoint, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   return response.data;
 };
 
 export const addProject = async (name) => {
-  const response = await projectsApi.post(projectsUrlEndpoint, {
-    name,
-  });
+  const response = await projectsApi.post(
+    projectsUrlEndpoint,
+    {
+      name,
+    },
+    { headers: { 'Content-Type': 'application/json' } }
+  );
   return response.data;
 };
 
