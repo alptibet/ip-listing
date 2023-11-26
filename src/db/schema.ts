@@ -1,11 +1,4 @@
-import {
-  integer,
-  json,
-  pgEnum,
-  pgTable,
-  serial,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { integer, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const statusEnum = pgEnum('status', ['Assigned', 'Not Assigned']);
@@ -28,10 +21,10 @@ export const devices = pgTable('devices', {
   gateway: varchar('gateway'),
   status: statusEnum('status').default('Not Assigned'),
   system: varchar('system'),
-  projectId: integer('project_id'),
+  projectId: integer('project_id')
+    .notNull()
+    .references(() => projects.id),
 });
-
-export type Device = typeof devices.$inferSelect;
 
 export const deviceRelations = relations(devices, ({ one }) => ({
   project: one(projects, {
