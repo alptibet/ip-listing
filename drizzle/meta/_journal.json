@@ -15,6 +15,13 @@
       "when": 1700978845635,
       "tag": "0001_high_phantom_reporter",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1700982257596,
+      "tag": "0002_pink_blonde_phantom",
+      "breakpoints": true
     }
   ]
 }

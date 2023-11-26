@@ -44,7 +44,11 @@ export async function DELETE(req: NextRequest) {
       .delete(projects)
       .where(eq(projects.name, body.name))
       .returning();
-    console.log(deleteProject);
+
+    await dbClient
+      .delete(devices)
+      .where(eq(devices.projectId, deleteProject[0].id));
+
     return NextResponse.json(deleteProject, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(

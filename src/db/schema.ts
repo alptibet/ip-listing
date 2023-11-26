@@ -23,7 +23,7 @@ export const devices = pgTable('devices', {
   system: varchar('system'),
   projectId: integer('project_id')
     .notNull()
-    .references(() => projects.id),
+    .references(() => projects.id, { onDelete: 'cascade' }),
 });
 
 export const deviceRelations = relations(devices, ({ one }) => ({
