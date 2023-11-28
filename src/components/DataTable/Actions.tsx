@@ -12,14 +12,29 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Separator } from '@radix-ui/react-separator';
-import type { Device } from './Columns';
+import type { Device as deviceSchema } from './Columns';
 import { Row, Table } from '@tanstack/react-table';
 import { useState } from 'react';
 import { toast } from '../ui/use-toast';
 import axios from 'axios';
+import { ZodError, z } from 'zod';
+
+const statusEnum = z.enum(['Assigned', 'Not Assigned']);
+
+const deviceSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  location: z.string(),
+  ipAddress: z.string().ip().or(z.literal('')),
+  subnet: z.string().ip().or(z.literal('')),
+  gateway: z.string().ip().or(z.literal('')),
+  status: statusEnum,
+  system: z.string(),
+  projectId: z.number(),
+});
 
 interface ActionsProps<TData> {
-  tableRow: Row<Device>;
+  tableRow: Row<deviceSchema>;
   table: Table<TData>;
 }
 
@@ -30,7 +45,10 @@ const devicesApi = axios.create({
       : 'http://localhost:3000',
 });
 
-export default function Actions({ tableRow, table }: ActionsProps<Device>) {
+export default function Actions({
+  tableRow,
+  table,
+}: ActionsProps<deviceSchema>) {
   const [viewEditActions, setViewEditActions] = useState(false);
   const tableMeta = table.options.meta;
   const projectName = tableMeta?.project.name;
@@ -93,6 +111,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       system: tableRow.original.system,
       projectId,
     };
+
     try {
       await devicesApi.patch(`api/projects/${projectName}`, editedDevice);
       toast({
@@ -103,7 +122,7 @@ export default function Actions({ tableRow, table }: ActionsProps<Device>) {
       toast({
         title: 'Something went wrong...',
         description: `${error.message}`,
-        duration: 3000,
+        duration: 5000,
         variant: 'destructive',
       });
     }
