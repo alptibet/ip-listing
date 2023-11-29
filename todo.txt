@@ -1,4 +1,2 @@
--- Do not toggle visibility row actions
 -- add hyperlinks to ip addresses
 -- import from excel
--- implement zod for ip fields entry
