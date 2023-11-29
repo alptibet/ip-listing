@@ -17,7 +17,7 @@ import { Row, Table } from '@tanstack/react-table';
 import { useState } from 'react';
 import { toast } from '../ui/use-toast';
 import axios from 'axios';
-import { ZodError, z } from 'zod';
+import { z } from 'zod';
 
 const statusEnum = z.enum(['Assigned', 'Not Assigned']);
 
@@ -111,8 +111,25 @@ export default function Actions({
       system: tableRow.original.system,
       projectId,
     };
-
+    let issuesArr = [];
     try {
+      const parseResult = deviceSchema.safeParse(editedDevice);
+      if (!parseResult.success) {
+        const issues = parseResult.error.issues;
+        if (issues.some((err) => err.path[0] === 'ipAddress')) {
+          issuesArr.push('Invalid Ip Address.');
+        }
+        if (issues.some((err) => err.path[0] === 'subnet')) {
+          issuesArr.push('Invalid Subnet.');
+        }
+        if (issues.some((err) => err.path[0] === 'gateway')) {
+          issuesArr.push('Invalid Gateway.');
+        }
+        let errorMessage = '';
+        issuesArr.forEach((err) => (errorMessage += `- ${err}\n`));
+        console.log(errorMessage);
+        throw new Error(errorMessage);
+      }
       await devicesApi.patch(`api/projects/${projectName}`, editedDevice);
       toast({
         description: 'Saving changes.',
@@ -122,7 +139,7 @@ export default function Actions({
       toast({
         title: 'Something went wrong...',
         description: `${error.message}`,
-        duration: 5000,
+        duration: 10000,
         variant: 'destructive',
       });
     }
