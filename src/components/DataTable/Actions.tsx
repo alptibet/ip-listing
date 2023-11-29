@@ -111,22 +111,20 @@ export default function Actions({
       system: tableRow.original.system,
       projectId,
     };
-    let issuesArr = [];
+    let errorMessage = '';
     try {
       const parseResult = deviceSchema.safeParse(editedDevice);
       if (!parseResult.success) {
         const issues = parseResult.error.issues;
         if (issues.some((err) => err.path[0] === 'ipAddress')) {
-          issuesArr.push('Invalid Ip Address.');
+          errorMessage = errorMessage + 'Invalid IP Address. ';
         }
         if (issues.some((err) => err.path[0] === 'subnet')) {
-          issuesArr.push('Invalid Subnet.');
+          errorMessage = errorMessage + 'Invalid Subnet. ';
         }
         if (issues.some((err) => err.path[0] === 'gateway')) {
-          issuesArr.push('Invalid Gateway.');
+          errorMessage = errorMessage + 'Invalid Gateway. ';
         }
-        let errorMessage = '';
-        issuesArr.forEach((err) => (errorMessage += `- ${err}\n`));
         console.log(errorMessage);
         throw new Error(errorMessage);
       }
