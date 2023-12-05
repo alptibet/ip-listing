@@ -25,6 +25,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@tanstack/react-table": "^8.10.7",
     "axios": "^1.6.1",
+    "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
@@ -32,6 +33,7 @@
     "drizzle-orm": "^0.29.0",
     "lucide-react": "^0.287.0",
     "next": "latest",
+    "next-auth": "^5.0.0-beta.4",
     "next-themes": "^0.2.1",
     "pg": "^8.11.3",
     "postgres": "^3.4.3",
@@ -44,6 +46,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
