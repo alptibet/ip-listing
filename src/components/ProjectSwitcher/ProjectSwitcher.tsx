@@ -35,12 +35,6 @@ import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import DeleteProjectAlert from '../DeteleProjectAlert/DeleteProjectAlert';
 import useSWR from 'swr';
-import {
-  getProjects,
-  addProject,
-  deleteProject,
-  projectsUrlEndpoint as cacheKey,
-} from '../../app/api/projectApi';
 import { toast } from '../ui/use-toast';
 import axios from 'axios';
 
