@@ -1,6 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button';
 import Link from 'next/link';
-import { SignOutButton } from '@clerk/nextjs';
 
 type ButtonProps = {
   label: string;
@@ -20,11 +19,7 @@ export function ButtonSecondary({ label }: ButtonProps) {
 }
 
 export function ButtonLogout({ label }: ButtonProps) {
-  return (
-    <SignOutButton>
-      <Button variant="destructive">{label}</Button>
-    </SignOutButton>
-  );
+  return <Button variant="destructive">{label}</Button>;
 }
 
 export function ButtonLink({ label, url }: ButtonLinkProps) {

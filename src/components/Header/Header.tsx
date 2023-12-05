@@ -1,10 +1,9 @@
 import ProjectSwitcher from '../ProjectSwitcher/ProjectSwitcher';
 import ThemeToggleButton from '../ThemeToggleButton/ThemeToggleButton';
-import { currentUser } from '@clerk/nextjs/server';
 import UserActions from '../UserActions/UserActions';
 
 export default async function Header() {
-  const user = await currentUser();
+  const user = { firstName: 'Alp', lastName: 'Tibet' };
   let loggedInUser;
   if (user) {
     loggedInUser = {
