@@ -1,1 +1,3 @@
 -- import from excel
+-- warning on delete
+-- sorting issues
