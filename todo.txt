@@ -1,3 +1,4 @@
 -- import from excel
 -- warning on delete
 -- sorting issues
+-- manual confirm on signup
