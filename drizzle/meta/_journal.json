@@ -8,6 +8,20 @@
       "when": 1700999592798,
       "tag": "0000_outstanding_azazel",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1701883965041,
+      "tag": "0001_fantastic_tag",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1701884259745,
+      "tag": "0002_freezing_beast",
+      "breakpoints": true
     }
   ]
 }

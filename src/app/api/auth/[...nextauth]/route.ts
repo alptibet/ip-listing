@@ -1,7 +1,13 @@
+import { dbClient } from '@/db/db';
+import { users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 const handler = NextAuth({
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -10,18 +16,10 @@ const handler = NextAuth({
         password: {},
       },
       async authorize(credentials, req) {
-        const res = await fetch('/your/endpoint', {
-          method: 'POST',
-          body: JSON.stringify(credentials),
-          headers: { 'Content-Type': 'application/json' },
+        const response = await dbClient.query.users.findFirst({
+          where: (users, { eq }) => eq(users.username, credentials?.username),
         });
-        const user = await res.json();
-
-        // If no error and we have user data, return it
-        if (res.ok && user) {
-          return user;
-        }
-        // Return null if user data could not be retrieved
+        console.log(response);
         return null;
       },
     }),
