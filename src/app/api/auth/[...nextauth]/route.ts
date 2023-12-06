@@ -1,6 +1,4 @@
 import { dbClient } from '@/db/db';
-import { users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -15,11 +13,19 @@ const handler = NextAuth({
         username: {},
         password: {},
       },
-      async authorize(credentials, req) {
-        const response = await dbClient.query.users.findFirst({
-          where: (users, { eq }) => eq(users.username, credentials?.username),
+      async authorize(credentials): Promise<any> {
+        const user = await dbClient.query.users.findFirst({
+          where: (users, { eq }) =>
+            eq(users.username, credentials?.username as string),
         });
-        console.log(response);
+        if (user) {
+          return {
+            id: user.id,
+            email: user.email,
+            firstname: user.firstName,
+            lastname: user.lastName,
+          };
+        }
         return null;
       },
     }),
