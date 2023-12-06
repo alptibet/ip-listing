@@ -4,7 +4,6 @@ import {
   pgTable,
   serial,
   varchar,
-  text,
   boolean,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
@@ -49,9 +48,10 @@ export const deviceRelations = relations(devices, ({ one }) => ({
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
-  username: text('username').notNull().unique(),
-  firstName: text('first_name').notNull(),
-  lastName: text('last_name').notNull(),
+  username: varchar('username').notNull().unique(),
+  password: varchar('password').notNull(),
+  firstName: varchar('first_name').notNull(),
+  lastName: varchar('last_name').notNull(),
   isActive: boolean('is_active').notNull().default(false),
   userRole: roleEnum('user_role').notNull().default('user'),
 });
