@@ -3,6 +3,7 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
+import { dbClient } from '@/db/db';
 
 //create get user function
 
@@ -13,7 +14,7 @@ export const { auth, signIn, signOut } = NextAuth({
       async authorize(credentials) {
         const parsedCredentials = z
           .object({
-            email: z.string().email(),
+            username: z.string().email(),
             password: z.string().min(8),
           })
           .safeParse(credentials);
