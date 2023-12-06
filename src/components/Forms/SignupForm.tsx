@@ -4,19 +4,15 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Loader2 } from 'lucide-react';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 export default function SignupForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  async function onSubmit(event: React.SyntheticEvent) {
-    event.preventDefault();
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-  }
+  const onSubmit = async function (e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+  };
 
   return (
     <div className="flex flex-col items-center max-h-screen">
@@ -28,27 +24,32 @@ export default function SignupForm() {
         <Label className="" htmlFor="username">
           Username
         </Label>
-        <Input id="username" type="text" />
+        <Input id="username" name="username" type="text" />
 
         <Label className="" htmlFor="password">
           Password
         </Label>
-        <Input id="password" type="password" />
+        <Input id="password" name="password" type="password" />
 
         <Label className="" htmlFor="email">
           Email
         </Label>
-        <Input id="email" placeholder="name@example.com" type="email" />
+        <Input
+          id="email"
+          name="email"
+          placeholder="name@example.com"
+          type="email"
+        />
 
         <Label className="" htmlFor="firstname">
           First Name
         </Label>
-        <Input id="firstname" type="text" />
+        <Input id="firstname" name="firstname" type="text" />
 
         <Label className="" htmlFor="lastname">
           Last Name
         </Label>
-        <Input id="lastname" type="text" />
+        <Input id="lastname" name="lastname" type="text" />
 
         <div className="flex justify-between">
           <Button className="mt-2" disabled={isLoading}>
