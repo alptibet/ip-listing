@@ -50,7 +50,7 @@ export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   username: varchar('username').notNull().unique(),
   password: varchar('password').notNull(),
-  email: varchar('email').notNull(),
+  email: varchar('email').notNull().unique(),
   firstName: varchar('first_name').notNull(),
   lastName: varchar('last_name').notNull(),
   isActive: boolean('is_active').notNull().default(false),
