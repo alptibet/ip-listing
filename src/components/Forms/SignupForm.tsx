@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
+import { toast } from '../ui/use-toast';
 
 const usersApi = axios.create({
   baseURL:
@@ -32,6 +33,12 @@ export default function SignupForm() {
       setIsLoading(true);
       await usersApi.post('api/auth/signup', newUserData);
     } catch (error: any) {
+      toast({
+        title: 'Something went wrong...',
+        description: `${error.message}`,
+        duration: 3000,
+        variant: 'destructive',
+      });
       console.log(error);
     } finally {
       setIsLoading(false);

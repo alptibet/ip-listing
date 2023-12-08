@@ -5,6 +5,7 @@ import { users } from '@/db/schema';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  console.log(body);
   try {
     const hashedPassword = await hash(body.password, 10);
     const newUser = { ...body, password: hashedPassword };
@@ -12,6 +13,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'success' }, { status: 201 });
   } catch (error: any) {
     console.log(error);
-    return NextResponse.json({ message: 'fail' }, { status: 400 });
+    return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }
