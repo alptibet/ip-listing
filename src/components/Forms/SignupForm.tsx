@@ -35,11 +35,10 @@ export default function SignupForm() {
     } catch (error: any) {
       toast({
         title: 'Something went wrong...',
-        description: `${error.message}`,
+        description: `${error.response.data.detail}`,
         duration: 3000,
         variant: 'destructive',
       });
-      console.log(error);
     } finally {
       setIsLoading(false);
     }
