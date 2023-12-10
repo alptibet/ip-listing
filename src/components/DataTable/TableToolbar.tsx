@@ -18,7 +18,6 @@ const devicesApi = axios.create({
       ? process.env.NEXT_PUBLIC_URL
       : 'http://localhost:3000',
 });
-console.log('deneme');
 export default function TableToolbar({ table }: TableToolBarProps) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const tableMeta = table.options.meta;
