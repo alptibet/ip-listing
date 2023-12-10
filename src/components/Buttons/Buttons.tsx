@@ -18,10 +18,6 @@ export function ButtonSecondary({ label }: ButtonProps) {
   return <Button variant="secondary">{label}</Button>;
 }
 
-export function ButtonLogout({ label }: ButtonProps) {
-  return <Button variant="destructive">{label}</Button>;
-}
-
 export function ButtonLink({ label, url }: ButtonLinkProps) {
   return (
     <Link href={url} className={buttonVariants({ variant: 'outline' })}>

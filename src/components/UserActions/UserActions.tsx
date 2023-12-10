@@ -1,9 +1,10 @@
 'use client';
 import { CaretSortIcon, PersonIcon } from '@radix-ui/react-icons';
-import { ButtonLink, ButtonLogout } from '../Buttons/Buttons';
+import { ButtonLink } from '../Buttons/Buttons';
 import { Button } from '../ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 
 type UserPropTypes = {
   loggedInUser:
@@ -12,6 +13,15 @@ type UserPropTypes = {
         lastName: string | null;
       }
     | undefined;
+};
+
+const callbackUrl =
+  process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_URL
+    : 'http://localhost:3000';
+
+const handleSignout = async function () {
+  await signOut({ callbackUrl: callbackUrl });
 };
 
 export default function UserActions({ loggedInUser }: UserPropTypes) {
@@ -34,7 +44,11 @@ export default function UserActions({ loggedInUser }: UserPropTypes) {
             <ButtonLink label="Signup" url="/signup" />
           </>
         )}
-        {loggedInUser && <ButtonLogout label="Logout" />}
+        {loggedInUser && (
+          <Button onClick={handleSignout} variant="destructive">
+            Logout
+          </Button>
+        )}
       </PopoverContent>
     </Popover>
   );
