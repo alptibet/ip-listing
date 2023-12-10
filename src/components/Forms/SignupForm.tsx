@@ -47,7 +47,6 @@ export default function SignupForm() {
       setIsLoading(true);
       await usersApi.post('api/auth/signup', data);
     } catch (error: any) {
-      console.log(error);
       toast({
         title: 'Something went wrong...',
         description: `${error.response.data.detail}`,
