@@ -128,7 +128,6 @@ export default function Actions({
         if (issues.some((err) => err.path[0] === 'gateway')) {
           errorMessage = errorMessage + 'Invalid Gateway. ';
         }
-        console.log(errorMessage);
         throw new Error(errorMessage);
       }
       await devicesApi.patch(`api/projects/${projectName}`, editedDevice);
@@ -183,6 +182,7 @@ export default function Actions({
         id="cancel"
         variant="destructive"
         onClick={(e) => {
+          tableRow.pin(false);
           setViewEditActions(false);
           setInEditMode(e);
         }}
@@ -217,6 +217,7 @@ export default function Actions({
               onClick={(e) => {
                 setViewEditActions(true);
                 setInEditMode(e);
+                tableRow.pin('top');
               }}
             >
               Edit Item

@@ -3,6 +3,7 @@
 import {
   ColumnFiltersState,
   SortingState,
+  RowPinningState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -44,6 +45,10 @@ declare module '@tanstack/react-table' {
 
 export function DataTable({ deviceData }: any) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowPinning, setRowPinning] = useState<RowPinningState>({
+    top: [],
+    bottom: [],
+  });
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
@@ -56,8 +61,12 @@ export function DataTable({ deviceData }: any) {
     data,
     columns,
     enableRowSelection: true,
+    enableRowPinning: true,
+    enablePinning: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
+    onRowPinningChange: setRowPinning,
+    keepPinnedRows: true,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
@@ -68,6 +77,7 @@ export function DataTable({ deviceData }: any) {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
+      rowPinning,
       sorting,
       columnFilters,
       columnVisibility,
@@ -151,8 +161,20 @@ export function DataTable({ deviceData }: any) {
             ))}
           </TableHeader>
           <TableBody>
+            {table.getTopRows().map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && 'selected'}
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
+              table.getCenterRows().map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}

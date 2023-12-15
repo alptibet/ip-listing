@@ -6,6 +6,7 @@ import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import Actions from './Actions';
 import EditableCell from './EditableCell';
+import { useMemo } from 'react';
 
 export type Device = {
   id?: string;
