@@ -51,16 +51,10 @@ export const columns: ColumnDef<Device>[] = [
   },
   {
     accessorKey: 'ipAddress',
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          className="h-8"
-          size="sm"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
+        <Button className="h-8" size="sm" variant="ghost">
           IP Address
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
@@ -83,16 +77,10 @@ export const columns: ColumnDef<Device>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          className="h-8"
-          size="sm"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
+        <Button className="h-8" size="sm" variant="ghost">
           Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
@@ -110,16 +98,10 @@ export const columns: ColumnDef<Device>[] = [
   },
   {
     accessorKey: 'system',
-    header: ({ column }) => {
+    header: () => {
       return (
-        <Button
-          className="h-8"
-          size="sm"
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-        >
+        <Button className="h-8" size="sm" variant="ghost">
           System
-          <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },

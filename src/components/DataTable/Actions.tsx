@@ -182,7 +182,6 @@ export default function Actions({
         id="cancel"
         variant="destructive"
         onClick={(e) => {
-          tableRow.pin(false);
           setViewEditActions(false);
           setInEditMode(e);
         }}
@@ -217,7 +216,6 @@ export default function Actions({
               onClick={(e) => {
                 setViewEditActions(true);
                 setInEditMode(e);
-                tableRow.pin('top');
               }}
             >
               Edit Item
