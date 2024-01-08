@@ -26,7 +26,6 @@ export default function DashboardPage({
   params: { name: string };
 }) {
   const { data: session } = useSession();
-  console.log(session);
 
   const {
     isLoading,
