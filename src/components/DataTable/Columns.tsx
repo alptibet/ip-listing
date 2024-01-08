@@ -2,11 +2,9 @@
 
 import { Checkbox } from '@/components/ui/checkbox';
 import { ColumnDef, RowData } from '@tanstack/react-table';
-import { ArrowUpDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import Actions from './Actions';
 import EditableCell from './EditableCell';
-import { useMemo } from 'react';
 
 export type Device = {
   id?: string;
