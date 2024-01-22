@@ -1,9 +1,5 @@
-import { SignIn } from '@clerk/nextjs';
+import LoginForm from '@/components/Forms/LoginForm';
 
-export default function Page() {
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <SignIn afterSignInUrl={'/dashboard'} />
-    </div>
-  );
+export default function Signin() {
+  return <LoginForm />;
 }

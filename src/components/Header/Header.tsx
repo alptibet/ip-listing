@@ -1,10 +1,13 @@
 import ProjectSwitcher from '../ProjectSwitcher/ProjectSwitcher';
 import ThemeToggleButton from '../ThemeToggleButton/ThemeToggleButton';
-import { currentUser } from '@clerk/nextjs/server';
 import UserActions from '../UserActions/UserActions';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export default async function Header() {
-  const user = await currentUser();
+  const session = await getServerSession(authOptions);
+  const user = session?.user;
+
   let loggedInUser;
   if (user) {
     loggedInUser = {
@@ -13,11 +16,17 @@ export default async function Header() {
     };
   }
 
+  const canEditProjects = user?.userRole !== 'user';
+
   return (
     <div className="flex items-center justify-between mx-2 my-2">
       <div className="flex items-center gap-5">
-        <h2>Projects</h2>
-        {user && <ProjectSwitcher />}
+        {user?.isActive && (
+          <>
+            <h2>Projects</h2>
+            <ProjectSwitcher canEditProjects={canEditProjects} />
+          </>
+        )}
       </div>
 
       <div className="flex items-center gap-5">

@@ -50,7 +50,13 @@ const fetcher = async function (url: string) {
   return response.data;
 };
 
-export default function ProjectSwitcher() {
+type ProjectSwitcherPropTypes = {
+  canEditProjects: boolean;
+};
+
+export default function ProjectSwitcher({
+  canEditProjects,
+}: ProjectSwitcherPropTypes) {
   const [showPopover, setShowPopover] = useState(false);
   const [showNewProjectDialog, setShowNewProjectDialog] = useState(false);
   const [newProject, setNewProject] = useState('');
@@ -170,21 +176,25 @@ export default function ProjectSwitcher() {
             <CommandList>
               <CommandGroup>
                 <DialogTrigger asChild>
-                  <>
-                    <CommandItem
-                      onSelect={() => {
-                        setShowPopover(false);
-                        setShowNewProjectDialog(true);
-                      }}
-                    >
-                      <PlusCircledIcon className="mr-2" />
-                      Add Project
-                    </CommandItem>
-                    <CommandItem>
-                      <DeleteProjectAlert deleteHandler={handleDeleteProject} />
-                      Delete selected project
-                    </CommandItem>
-                  </>
+                  {canEditProjects && (
+                    <>
+                      <CommandItem
+                        onSelect={() => {
+                          setShowPopover(false);
+                          setShowNewProjectDialog(true);
+                        }}
+                      >
+                        <PlusCircledIcon className="mr-2" />
+                        Add Project
+                      </CommandItem>
+                      <CommandItem>
+                        <DeleteProjectAlert
+                          deleteHandler={handleDeleteProject}
+                        />
+                        Delete selected project
+                      </CommandItem>
+                    </>
+                  )}
                 </DialogTrigger>
               </CommandGroup>
             </CommandList>

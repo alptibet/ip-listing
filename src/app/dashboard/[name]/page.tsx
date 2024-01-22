@@ -6,6 +6,7 @@ import { Loader2 } from 'lucide-react';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 const devicesApi = axios.create({
   baseURL:
@@ -24,11 +25,25 @@ export default function DashboardPage({
 }: {
   params: { name: string };
 }) {
+  const { data: session } = useSession();
+
   const {
     isLoading,
     error,
     data: devices,
   } = useSWR(`api/projects/${name.toUpperCase()}`, fetcher);
+
+  if (!session) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Alert variant="destructive" className="ml-2 w-max">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Not Authorized</AlertTitle>
+          <AlertDescription>Login to view this page.</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -46,7 +61,7 @@ export default function DashboardPage({
           {error && <AlertDescription>{error.message}</AlertDescription>}
           {!devices && (
             <AlertDescription>
-              There was a problem fetching problem {name.toUpperCase()}.
+              There was a problem fetching {name.toUpperCase()}.
             </AlertDescription>
           )}
           <AlertDescription>

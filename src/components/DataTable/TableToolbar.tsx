@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import { Device } from './Columns';
 import { toast } from '../ui/use-toast';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 type TableToolBarProps = {
   table: Table<Device>;
@@ -17,12 +18,14 @@ const devicesApi = axios.create({
       ? process.env.NEXT_PUBLIC_URL
       : 'http://localhost:3000',
 });
-
 export default function TableToolbar({ table }: TableToolBarProps) {
   const isFiltered = table.getState().columnFilters.length > 0;
   const tableMeta = table.options.meta;
   const projectName = tableMeta?.project.name;
   const projectId = tableMeta?.project.id;
+
+  const session = useSession();
+  const isAdmin = session.data?.user?.userRole !== 'user';
 
   const handleDeleteDevice = async function () {
     const itemsToDelete = table.getSelectedRowModel().rows.map((item) => {
@@ -149,8 +152,14 @@ export default function TableToolbar({ table }: TableToolBarProps) {
       </div>
       <div className="flex mb-4">
         <div className="flex gap-2">
-          <Button onClick={handleNewDevice}>Add Device</Button>
-          <Button variant="destructive" onClick={handleDeleteDevice}>
+          <Button disabled={!isAdmin} onClick={handleNewDevice}>
+            Add Device
+          </Button>
+          <Button
+            disabled={!isAdmin}
+            variant="destructive"
+            onClick={handleDeleteDevice}
+          >
             Remove Selected
           </Button>
         </div>

@@ -18,6 +18,7 @@ import { useState } from 'react';
 import { toast } from '../ui/use-toast';
 import axios from 'axios';
 import { z } from 'zod';
+import { useSession } from 'next-auth/react';
 
 const statusEnum = z.enum(['Assigned', 'Not Assigned']);
 
@@ -53,6 +54,8 @@ export default function Actions({
   const tableMeta = table.options.meta;
   const projectName = tableMeta?.project.name;
   const projectId = tableMeta?.project.id;
+  const session = useSession();
+  const isAdmin = session.data?.user?.userRole !== 'user';
 
   const setInEditMode = function (e: React.SyntheticEvent) {
     const elementName = e.currentTarget.id;
@@ -125,7 +128,6 @@ export default function Actions({
         if (issues.some((err) => err.path[0] === 'gateway')) {
           errorMessage = errorMessage + 'Invalid Gateway. ';
         }
-        console.log(errorMessage);
         throw new Error(errorMessage);
       }
       await devicesApi.patch(`api/projects/${projectName}`, editedDevice);
@@ -204,24 +206,30 @@ export default function Actions({
         >
           Copy IP Address
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleNewDevice}>Add Row</DropdownMenuItem>
-        <DropdownMenuItem
-          id="edit"
-          onClick={(e) => {
-            setViewEditActions(true);
-            setInEditMode(e);
-          }}
-        >
-          Edit Item
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          id="remove"
-          onClick={() => {
-            handleDelete();
-          }}
-        >
-          Delete Item
-        </DropdownMenuItem>
+        {isAdmin && (
+          <>
+            <DropdownMenuItem onClick={handleNewDevice}>
+              Add Row
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              id="edit"
+              onClick={(e) => {
+                setViewEditActions(true);
+                setInEditMode(e);
+              }}
+            >
+              Edit Item
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              id="remove"
+              onClick={() => {
+                handleDelete();
+              }}
+            >
+              Delete Item
+            </DropdownMenuItem>
+          </>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

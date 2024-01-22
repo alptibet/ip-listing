@@ -1,7 +1,20 @@
-import { integer, pgEnum, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import {
+  integer,
+  pgEnum,
+  pgTable,
+  serial,
+  varchar,
+  boolean,
+} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 export const statusEnum = pgEnum('status', ['Assigned', 'Not Assigned']);
+export const roleEnum = pgEnum('userRole', [
+  'superadmin',
+  'admin',
+  'superuser',
+  'user',
+]);
 
 export const projects = pgTable('projects', {
   id: serial('id').primaryKey(),
@@ -32,3 +45,14 @@ export const deviceRelations = relations(devices, ({ one }) => ({
     references: [projects.id],
   }),
 }));
+
+export const users = pgTable('users', {
+  id: serial('id').primaryKey(),
+  username: varchar('username').notNull().unique(),
+  password: varchar('password').notNull(),
+  email: varchar('email').notNull().unique(),
+  firstName: varchar('first_name').notNull(),
+  lastName: varchar('last_name').notNull(),
+  isActive: boolean('is_active').notNull().default(false),
+  userRole: roleEnum('user_role').notNull().default('user'),
+});
